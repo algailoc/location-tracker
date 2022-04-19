@@ -1,15 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_tracker/dependencies_injection.dart' as di;
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   void _getFirebaseData(BuildContext context) async {
-    // BlocProvider.of<UsersBloc>(context).add(event)
+    BlocProvider.of<UsersBloc>(context).add(AddFriend('2'));
+  }
+
+  @override
+  void initState() {
+    BlocProvider.of<UsersBloc>(context).add(GetUserData());
+    if (BlocProvider.of<UsersBloc>(context).users.isEmpty) {
+      BlocProvider.of<UsersBloc>(context).add(GetAllUsers());
+    }
+    super.initState();
   }
 
   @override

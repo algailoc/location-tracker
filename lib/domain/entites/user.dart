@@ -2,7 +2,7 @@ abstract class User {
   final String email, id;
   final double lat, long;
   final List<User> friends;
-  final bool apprived, initializer;
+  final bool approved, initializer;
 
   User({
     required this.email,
@@ -10,7 +10,7 @@ abstract class User {
     required this.lat,
     required this.long,
     required this.friends,
-    this.apprived = false,
+    this.approved = false,
     this.initializer = false,
   });
 }

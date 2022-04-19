@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../domain/entites/user.dart';
 
 class UserModel extends User {
@@ -15,7 +17,7 @@ class UserModel extends User {
           lat: lat,
           long: long,
           friends: friends,
-          apprived: approved,
+          approved: approved,
           initializer: initializer,
         );
 
@@ -37,6 +39,22 @@ class UserModel extends User {
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': email, 'lat': lat, 'long': long};
+    return {
+      'id': id,
+      'name': email,
+      'lat': lat,
+      'long': long,
+    };
+  }
+
+  UserModel copyWith({bool? approved, bool? initializer}) {
+    return UserModel(
+        id: id,
+        email: email,
+        lat: lat,
+        long: long,
+        friends: friends,
+        approved: approved ?? this.approved,
+        initializer: initializer ?? this.initializer);
   }
 }
