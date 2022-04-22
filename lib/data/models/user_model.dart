@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import '../../domain/entites/user.dart';
 
 class UserModel extends User {
@@ -47,12 +45,13 @@ class UserModel extends User {
     };
   }
 
-  UserModel copyWith({bool? approved, bool? initializer}) {
+  UserModel copyWith(
+      {bool? approved, bool? initializer, double? lat, double? long}) {
     return UserModel(
         id: id,
         email: email,
-        lat: lat,
-        long: long,
+        lat: lat ?? this.lat,
+        long: long ?? this.long,
         friends: friends,
         approved: approved ?? this.approved,
         initializer: initializer ?? this.initializer);

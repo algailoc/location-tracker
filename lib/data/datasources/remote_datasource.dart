@@ -3,6 +3,7 @@ import 'package:firebase_tracker/core/errors/exceptions.dart';
 import 'package:firebase_tracker/data/models/user_model.dart';
 
 import '../../domain/entites/user.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class RemoteDatasource {
   // Users Bloc
@@ -14,6 +15,8 @@ abstract class RemoteDatasource {
   // Auth Bloc
   Future<String> getUserJwt(String email);
   Future<String> createUser(String email);
+  Future<String> registerUser(String email, String password);
+  Future<String> authorizeUser(String email, String password);
 
   // Misc
   Future<User> getUser(String jwt);
@@ -66,11 +69,12 @@ class RemoteDatacourceImpl extends RemoteDatasource {
 
       users.doc(jwt).update({
         'friends':
-            FieldValue.arrayUnion([friend.copyWith(approved: true).toJson()]),
+            FieldValue.arrayUnion([friend.copyWith(approved: false).toJson()]),
       });
       // add user1 to user2's friends
       users.doc(friendPath).update({
-        'friends': FieldValue.arrayRemove([user.toJson()]),
+        'friends': FieldValue.arrayRemove(
+            [user.copyWith(approved: false, initializer: true).toJson()]),
       });
 
       users.doc(friendPath).update({
@@ -115,11 +119,13 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     if (hasUser) {
       // add friend2 to user1's friends
       users.doc(jwt).update({
-        'friends': FieldValue.arrayUnion([friend.toJson()]),
+        'friends':
+            FieldValue.arrayUnion([friend.copyWith(approved: true).toJson()]),
       });
       // add user1 to user2's friends
       users.doc(friendPath).update({
-        'friends': FieldValue.arrayUnion([user.toJson()])
+        'friends':
+            FieldValue.arrayUnion([user.copyWith(approved: true).toJson()])
       });
     }
     late UserModel newUser;
@@ -182,6 +188,8 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
+
+  /// After logging in
   Future<String> getUserJwt(String email) async {
     late String result;
 
@@ -192,8 +200,11 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
+
+  /// After signing up
   Future<String> createUser(String email) async {
-    String id = '0'; //TODO: generate id
+    var uuid = const Uuid();
+    String id = uuid.v1();
 
     final result = await users
         .add({'friends': [], 'id': id, 'name': email, 'lat': 0, 'long': 0});
@@ -202,8 +213,27 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> updateCoordinates(String jwt, double lat, double long) {
-    // TODO: implement updateCoordinates
-    throw UnimplementedError();
+  Future<User> updateCoordinates(String jwt, double lat, double long) async {
+    users.doc(jwt).update({'lat': lat, 'long': long});
+
+    late UserModel newUser;
+
+    await users
+        .doc(jwt)
+        .get()
+        .then((value) => newUser = UserModel.fromJson(value.data() as dynamic));
+
+    return newUser;
+  }
+
+  @override
+  Future<String> authorizeUser(String email, String password) async {
+    //TODO: authorization
+    return 'success';
+  }
+
+  @override
+  Future<String> registerUser(String email, String password) async {
+    return 'success';
   }
 }

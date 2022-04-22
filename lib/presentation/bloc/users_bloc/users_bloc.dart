@@ -41,6 +41,24 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           user = success;
           emit(UsersLoadedState(users: users, user: user));
         });
+      } else if (event is ApproveFriend) {
+        final result = await usecases.approveFriend(event.friendId);
+        result.fold((error) {
+          emit(UsersErrorState(
+              users: users, user: user, message: error.message));
+        }, (success) {
+          user = success;
+          emit(UsersLoadedState(users: users, user: user));
+        });
+      } else if (event is DeleteFriend) {
+        final result = await usecases.deleteFriend(event.friendId);
+        result.fold((error) {
+          emit(UsersErrorState(
+              users: users, user: user, message: error.message));
+        }, (success) {
+          user = success;
+          emit(UsersLoadedState(users: users, user: user));
+        });
       }
     });
   }
