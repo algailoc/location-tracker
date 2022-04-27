@@ -81,11 +81,11 @@ class UsersRepositoryImpl extends UsersRepository {
   }
 
   @override
-  Future<Either<Failure, User>> deleteFriend(String friendId) async {
+  Future<Either<Failure, User>> deleteFriend(Friend friend) async {
     if (await networkInfo.isConnected) {
       try {
         final String jwt = localDatasource.getJwt();
-        final response = await remoteDatasource.deleteFriend(jwt, friendId);
+        final response = await remoteDatasource.deleteFriend(jwt, friend);
         return Right(response);
       } catch (e) {
         print('Delete Friend $e');

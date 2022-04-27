@@ -25,8 +25,8 @@ class UsersUsecases {
     return await repository.approveFriend(friendId);
   }
 
-  Future<Either<Failure, User>> deleteFriend(String friendId) async {
-    return await repository.deleteFriend(friendId);
+  Future<Either<Failure, User>> deleteFriend(Friend friend) async {
+    return await repository.deleteFriend(friend);
   }
 
   Future<Either<Failure, User>> updateCoordinates(

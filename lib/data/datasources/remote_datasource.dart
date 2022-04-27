@@ -10,7 +10,7 @@ abstract class RemoteDatasource {
   // Users Bloc
   Future<User> addFriend(String jwt, String friendId);
   Future<User> approveFriend(String jwt, String friendId);
-  Future<User> deleteFriend(String jwt, String friendId);
+  Future<User> deleteFriend(String jwt, Friend friend);
   Future<User> updateCoordinates(String jwt, double lat, double long);
 
   // Auth Bloc
@@ -61,30 +61,32 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       friendPath = value.docs.first.id;
       friend = UserModel.fromJson(value.docs.first.data() as dynamic);
     });
-    bool hasUser = user.friends
-        .where((element) => element.email == friend.email)
-        .isNotEmpty;
-    if (hasUser) {
-      // add friend2 to user1's friends
-      users.doc(jwt).update({
-        'friends': FieldValue.arrayRemove([friend.toJson()]),
-      });
+    // bool hasUser = user.friends
+    //     .where((element) => element.email == friend.email)
+    //     .isNotEmpty;
+    // if (hasUser) {
+    // add friend2 to user1's friends
+    // await users.doc(jwt).update({
+    //   'friends': FieldValue.arrayRemove([friend.toJson()]),
+    // });
 
-      users.doc(jwt).update({
-        'friends': FieldValue.arrayUnion(
-            [friend.copyWith(approved: false, initializer: true).toJson()]),
-      });
-      // add user1 to user2's friends
-      users.doc(friendPath).update({
-        'friends': FieldValue.arrayRemove(
-            [user.copyWith(approved: false, initializer: false).toJson()]),
-      });
+    await users.doc(jwt).update({
+      'friends': FieldValue.arrayUnion([
+        {'id': friendId, 'approved': false, 'initializer': true}
+      ]),
+    });
+    // add user1 to user2's friends
+    // await users.doc(friendPath).update({
+    //   'friends': FieldValue.arrayRemove(
+    //       [user.copyWith(approved: false, initializer: false).toJson()]),
+    // });
 
-      users.doc(friendPath).update({
-        'friends':
-            FieldValue.arrayUnion([user.copyWith(approved: true).toJson()]),
-      });
-    }
+    await users.doc(friendPath).update({
+      'friends': FieldValue.arrayUnion([
+        {'id': user.id, 'approved': false, 'initializer': false}
+      ]),
+    });
+    // }
 
     late UserModel newUser;
 
@@ -116,26 +118,35 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       friendPath = value.docs.first.id;
       friend = UserModel.fromJson(value.docs.first.data() as dynamic);
     });
-    bool hasUser = user.friends
-        .where((element) => element.email == friend.email)
-        .isNotEmpty;
+    // bool hasUser = user.friends
+    //     .where((element) => element.email == friend.email)
+    //     .isNotEmpty;
 
-    if (hasUser) {
-      // add user1 to user2's friends
-      // add friend2 to user1's friends
-      await users.doc(jwt).update({
-        'friends': FieldValue.arrayRemove([friend.toJson()]),
-      });
-      await users.doc(jwt).update({
-        'friends':
-            FieldValue.arrayUnion([friend.copyWith(approved: true).toJson()]),
-      });
-      // add user1 to user2's friends
-      await users.doc(friendPath).update({
-        'friends':
-            FieldValue.arrayUnion([user.copyWith(approved: true).toJson()])
-      });
-    }
+    // if (hasUser) {
+    // add user1 to user2's friends
+    // add friend2 to user1's friends
+    await users.doc(jwt).update({
+      'friends': FieldValue.arrayRemove([
+        {'id': friendId, 'approved': false, 'initializer': true}
+      ]),
+    });
+    await users.doc(jwt).update({
+      'friends': FieldValue.arrayUnion([
+        {'id': friendId, 'approved': true, 'initializer': true}
+      ]),
+    });
+    // add user1 to user2's friends
+    await users.doc(jwt).update({
+      'friends': FieldValue.arrayRemove([
+        {'id': user.id, 'approved': false, 'initializer': false}
+      ]),
+    });
+    await users.doc(friendPath).update({
+      'friends': FieldValue.arrayUnion([
+        {'id': user.id, 'approved': false, 'initializer': false}
+      ])
+    });
+    // }
     late UserModel newUser;
 
     await users
@@ -147,7 +158,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> deleteFriend(String jwt, String friendId) async {
+  Future<User> deleteFriend(String jwt, Friend friendToDelete) async {
     late String friendPath;
     late UserModel user;
     late UserModel friend;
@@ -157,23 +168,35 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       user = UserModel.fromJson(value.data() as dynamic);
     });
     // find user with friendId(user2)
-    await users.where('id', isEqualTo: friendId).get().then((value) {
+    await users.where('id', isEqualTo: friendToDelete.id).get().then((value) {
       friendPath = value.docs.first.id;
       friend = UserModel.fromJson(value.docs.first.data() as dynamic);
     });
-    bool hasUser = user.friends
-        .where((element) => element.email == friend.email)
-        .isNotEmpty;
-    if (hasUser) {
-      // add friend2 to user1's friends
-      users.doc(jwt).update({
-        'friends': FieldValue.arrayRemove([friend.toJson()]),
-      });
-      // add user1 to user2's friends
-      users.doc(friendPath).update({
-        'friends': FieldValue.arrayRemove([user.toJson()])
-      });
-    }
+    // bool hasUser = user.friends
+    //     .where((element) => element.email == friend.email)
+    //     .isNotEmpty;
+    // if (hasUser) {
+    // add friend2 to user1's friends
+    await users.doc(jwt).update({
+      'friends': FieldValue.arrayRemove([
+        {
+          'id': friendToDelete.id,
+          'approved': friendToDelete.approved,
+          'initializer': friendToDelete.initializer
+        }
+      ]),
+    });
+    // add user1 to user2's friends
+    await users.doc(friendPath).update({
+      'friends': FieldValue.arrayRemove([
+        {
+          'id': user.id,
+          'approved': friendToDelete.approved,
+          'initializer': !friendToDelete.initializer
+        }
+      ])
+    });
+    // }
 
     late UserModel newUser;
 
@@ -192,6 +215,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
         .doc(jwt)
         .get()
         .then((value) => user = UserModel.fromJson(value.data() as dynamic));
+
     return user;
   }
 

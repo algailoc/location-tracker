@@ -8,6 +8,6 @@ abstract class UsersRepository {
   Future<Either<Failure, List<User>>> getAllUsers();
   Future<Either<Failure, User>> addFriend(String friendId);
   Future<Either<Failure, User>> approveFriend(String friendId);
-  Future<Either<Failure, User>> deleteFriend(String friendId);
+  Future<Either<Failure, User>> deleteFriend(Friend friend);
   Future<Either<Failure, User>> updateCoordinates(double lat, double long);
 }

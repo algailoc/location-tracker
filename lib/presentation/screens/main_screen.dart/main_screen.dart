@@ -42,7 +42,9 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void goToAddUserPage(BuildContext context) {}
+  void goToAddUserPage(BuildContext context) {
+    BlocProvider.of<UsersBloc>(context).add(AddFriend('2'));
+  }
 
   @override
   Widget build(BuildContext context) {

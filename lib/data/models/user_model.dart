@@ -1,12 +1,25 @@
 import '../../domain/entites/user.dart';
 
+class FriendModel extends Friend {
+  FriendModel(
+      {required String id, required bool approved, required bool initializer})
+      : super(approved: approved, id: id, initializer: initializer);
+
+  factory FriendModel.fromJson(Map<String, dynamic> json) {
+    return FriendModel(
+        id: json['id'],
+        approved: json['approved'],
+        initializer: json['initializer']);
+  }
+}
+
 class UserModel extends User {
   UserModel({
     required String id,
     required String email,
     required double lat,
     required double long,
-    required List<User> friends,
+    required List<Friend> friends,
     bool approved = false,
     bool initializer = false,
   }) : super(
@@ -20,10 +33,10 @@ class UserModel extends User {
         );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    List<User> friends = [];
+    List<Friend> friends = [];
 
     if (json['friends'] != null) {
-      json['friends'].forEach((el) => friends.add(UserModel.fromJson(el)));
+      json['friends'].forEach((el) => friends.add(FriendModel.fromJson(el)));
     }
 
     return UserModel(
@@ -48,13 +61,17 @@ class UserModel extends User {
   }
 
   UserModel copyWith(
-      {bool? approved, bool? initializer, double? lat, double? long}) {
+      {bool? approved,
+      bool? initializer,
+      double? lat,
+      double? long,
+      List<Friend>? friends}) {
     return UserModel(
         id: id,
         email: email,
         lat: lat ?? this.lat,
         long: long ?? this.long,
-        friends: friends,
+        friends: friends ?? this.friends,
         approved: approved ?? this.approved,
         initializer: initializer ?? this.initializer);
   }

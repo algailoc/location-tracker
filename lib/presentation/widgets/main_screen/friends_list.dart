@@ -59,11 +59,11 @@ class FriendsList extends StatelessWidget {
     return result != null && result;
   }
 
-  void deleteFriend(BuildContext context, User friend) async {
-    BlocProvider.of<UsersBloc>(context).add(DeleteFriend(friend.id));
+  void deleteFriend(BuildContext context, Friend friend) async {
+    BlocProvider.of<UsersBloc>(context).add(DeleteFriend(friend));
   }
 
-  void approveFriend(BuildContext context, User friend) {
+  void approveFriend(BuildContext context, Friend friend) {
     BlocProvider.of<UsersBloc>(context).add(ApproveFriend(friend.id));
   }
 
@@ -109,7 +109,7 @@ class FriendsList extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    state.user!.friends[index].email,
+                                    state.user!.friends[index].id,
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                   if (!state.user!.friends[index].approved &&

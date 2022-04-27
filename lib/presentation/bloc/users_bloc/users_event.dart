@@ -20,9 +20,9 @@ class ApproveFriend extends UsersEvent {
 }
 
 class DeleteFriend extends UsersEvent {
-  final String friendId;
+  final Friend friend;
 
-  DeleteFriend(this.friendId);
+  DeleteFriend(this.friend);
 }
 
 class UpdateCoordinates extends UsersEvent {

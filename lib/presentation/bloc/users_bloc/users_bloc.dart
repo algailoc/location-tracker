@@ -58,7 +58,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           emit(UsersLoadedState(users: users, user: user));
         });
       } else if (event is DeleteFriend) {
-        final result = await usecases.deleteFriend(event.friendId);
+        final result = await usecases.deleteFriend(event.friend);
         result.fold((error) {
           emit(UsersErrorState(
               users: users, user: user, message: error.message));
