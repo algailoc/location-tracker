@@ -7,7 +7,7 @@ class UserModel extends User {
     required double lat,
     required double long,
     required List<User> friends,
-    bool approved = true,
+    bool approved = false,
     bool initializer = false,
   }) : super(
           id: id,
@@ -31,7 +31,7 @@ class UserModel extends User {
         email: json['name'],
         lat: json['lat'].toDouble(),
         long: json['long'].toDouble(),
-        approved: json['approved'] ?? true,
+        approved: json['approved'] ?? false,
         initializer: json['initializer'] ?? false,
         friends: friends);
   }
@@ -42,6 +42,8 @@ class UserModel extends User {
       'name': email,
       'lat': lat,
       'long': long,
+      'approved': approved,
+      'initializer': initializer
     };
   }
 

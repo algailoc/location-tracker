@@ -105,11 +105,23 @@ class FriendsList extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   vertical: 12, horizontal: 8),
                               child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     state.user!.friends[index].email,
                                     style: const TextStyle(fontSize: 16),
                                   ),
+                                  if (!state.user!.friends[index].approved &&
+                                      !state.user!.friends[index].initializer)
+                                    IconButton(
+                                        tooltip: 'Одобрить',
+                                        onPressed: () => approveFriend(context,
+                                            state.user!.friends[index]),
+                                        icon: const Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                        ))
                                 ],
                               ),
                             ),

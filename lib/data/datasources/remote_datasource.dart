@@ -71,13 +71,13 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       });
 
       users.doc(jwt).update({
-        'friends':
-            FieldValue.arrayUnion([friend.copyWith(approved: false).toJson()]),
+        'friends': FieldValue.arrayUnion(
+            [friend.copyWith(approved: false, initializer: true).toJson()]),
       });
       // add user1 to user2's friends
       users.doc(friendPath).update({
         'friends': FieldValue.arrayRemove(
-            [user.copyWith(approved: false, initializer: true).toJson()]),
+            [user.copyWith(approved: false, initializer: false).toJson()]),
       });
 
       users.doc(friendPath).update({
@@ -119,14 +119,19 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     bool hasUser = user.friends
         .where((element) => element.email == friend.email)
         .isNotEmpty;
+
     if (hasUser) {
+      // add user1 to user2's friends
       // add friend2 to user1's friends
-      users.doc(jwt).update({
+      await users.doc(jwt).update({
+        'friends': FieldValue.arrayRemove([friend.toJson()]),
+      });
+      await users.doc(jwt).update({
         'friends':
             FieldValue.arrayUnion([friend.copyWith(approved: true).toJson()]),
       });
       // add user1 to user2's friends
-      users.doc(friendPath).update({
+      await users.doc(friendPath).update({
         'friends':
             FieldValue.arrayUnion([user.copyWith(approved: true).toJson()])
       });
