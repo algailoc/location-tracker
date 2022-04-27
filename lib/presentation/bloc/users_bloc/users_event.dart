@@ -14,9 +14,9 @@ class AddFriend extends UsersEvent {
 }
 
 class ApproveFriend extends UsersEvent {
-  final String friendId;
+  final Friend friend;
 
-  ApproveFriend(this.friendId);
+  ApproveFriend(this.friend);
 }
 
 class DeleteFriend extends UsersEvent {

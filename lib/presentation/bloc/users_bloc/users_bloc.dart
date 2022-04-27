@@ -49,7 +49,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           emit(FriendAddedState(users: users, user: user));
         });
       } else if (event is ApproveFriend) {
-        final result = await usecases.approveFriend(event.friendId);
+        final result = await usecases.approveFriend(event.friend);
         result.fold((error) {
           emit(UsersErrorState(
               users: users, user: user, message: error.message));

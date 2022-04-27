@@ -21,8 +21,8 @@ class UsersUsecases {
     return await repository.addFriend(friendId);
   }
 
-  Future<Either<Failure, User>> approveFriend(String friendId) async {
-    return await repository.approveFriend(friendId);
+  Future<Either<Failure, User>> approveFriend(Friend friend) async {
+    return await repository.approveFriend(friend);
   }
 
   Future<Either<Failure, User>> deleteFriend(Friend friend) async {

@@ -64,7 +64,7 @@ class FriendsList extends StatelessWidget {
   }
 
   void approveFriend(BuildContext context, Friend friend) {
-    BlocProvider.of<UsersBloc>(context).add(ApproveFriend(friend.id));
+    BlocProvider.of<UsersBloc>(context).add(ApproveFriend(friend));
   }
 
   void showFriendOnMap(BuildContext context, User friend) {}

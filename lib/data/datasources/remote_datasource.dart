@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 abstract class RemoteDatasource {
   // Users Bloc
   Future<User> addFriend(String jwt, String friendId);
-  Future<User> approveFriend(String jwt, String friendId);
+  Future<User> approveFriend(String jwt, Friend friend);
   Future<User> deleteFriend(String jwt, Friend friend);
   Future<User> updateCoordinates(String jwt, double lat, double long);
 
@@ -99,7 +99,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> approveFriend(String jwt, String friendId) async {
+  Future<User> approveFriend(String jwt, Friend friendToApprove) async {
     // change user's friend with frendId approved to true
     // get all users
     // find user with friendId
@@ -114,7 +114,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       user = UserModel.fromJson(value.data() as dynamic);
     });
     // find user with friendId(user2)
-    await users.where('id', isEqualTo: friendId).get().then((value) {
+    await users.where('id', isEqualTo: friendToApprove.id).get().then((value) {
       friendPath = value.docs.first.id;
       friend = UserModel.fromJson(value.docs.first.data() as dynamic);
     });
@@ -127,23 +127,39 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     // add friend2 to user1's friends
     await users.doc(jwt).update({
       'friends': FieldValue.arrayRemove([
-        {'id': friendId, 'approved': false, 'initializer': true}
+        {
+          'id': friendToApprove.id,
+          'approved': false,
+          'initializer': friendToApprove.initializer
+        }
       ]),
     });
     await users.doc(jwt).update({
       'friends': FieldValue.arrayUnion([
-        {'id': friendId, 'approved': true, 'initializer': true}
+        {
+          'id': friendToApprove.id,
+          'approved': true,
+          'initializer': friendToApprove.initializer
+        }
       ]),
     });
     // add user1 to user2's friends
     await users.doc(jwt).update({
       'friends': FieldValue.arrayRemove([
-        {'id': user.id, 'approved': false, 'initializer': false}
+        {
+          'id': user.id,
+          'approved': false,
+          'initializer': !friendToApprove.initializer
+        }
       ]),
     });
     await users.doc(friendPath).update({
       'friends': FieldValue.arrayUnion([
-        {'id': user.id, 'approved': false, 'initializer': false}
+        {
+          'id': user.id,
+          'approved': true,
+          'initializer': !friendToApprove.initializer
+        }
       ])
     });
     // }

@@ -65,11 +65,11 @@ class UsersRepositoryImpl extends UsersRepository {
   }
 
   @override
-  Future<Either<Failure, User>> approveFriend(String friendId) async {
+  Future<Either<Failure, User>> approveFriend(Friend friend) async {
     if (await networkInfo.isConnected) {
       try {
         final String jwt = localDatasource.getJwt();
-        final response = await remoteDatasource.approveFriend(jwt, friendId);
+        final response = await remoteDatasource.approveFriend(jwt, friend);
         return Right(response);
       } catch (e) {
         print('Approve Friend $e');
