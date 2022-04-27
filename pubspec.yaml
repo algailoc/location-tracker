@@ -43,6 +43,7 @@ dependencies:
   bloc: ^8.0.3
   dartz: ^0.10.1
   uuid: ^3.0.6
+  firebase_auth: ^3.3.15
 
 dev_dependencies:
   flutter_test:

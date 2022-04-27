@@ -15,9 +15,11 @@ class SignUpUser extends AuthorizationEvent {
   SignUpUser(this.email, this.password);
 }
 
-//Log in user and get their data
-class LogInUser extends AuthorizationEvent {
+///Log in user and get their data
+class SignInUser extends AuthorizationEvent {
   final String email, password;
 
-  LogInUser(this.email, this.password);
+  SignInUser(this.email, this.password);
 }
+
+class SignOutUser extends AuthorizationEvent {}

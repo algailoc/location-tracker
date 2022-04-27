@@ -21,7 +21,7 @@ class AuthorizationBloc extends Bloc<AuthorizationEvent, AuthorizationState> {
         }, (success) async {
           emit(UserAuthorized());
         });
-      } else if (event is LogInUser) {
+      } else if (event is SignInUser) {
         emit(AuthorizationPending());
         final result =
             await usecases.authorizeUser(event.email, event.password);
@@ -29,6 +29,14 @@ class AuthorizationBloc extends Bloc<AuthorizationEvent, AuthorizationState> {
           emit(AuthorizationError(failure.message));
         }, (success) async {
           emit(UserAuthorized());
+        });
+      } else if (event is SignOutUser) {
+        emit(AuthorizationPending());
+        final result = await usecases.signOut();
+        result.fold((failure) async {
+          emit(AuthorizationError(failure.message));
+        }, (success) async {
+          emit(AuthorizationInitial());
         });
       }
     });

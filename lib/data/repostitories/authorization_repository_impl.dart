@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_tracker/core/errors/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_tracker/core/network/network_info.dart';
@@ -37,7 +38,8 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
         }
       } catch (e) {
         print('Authorize User $e');
-        return Left(ServerFailure('Ошибка при авторизации'));
+        String message = e is FirebaseAuthException ? e.code : '';
+        return Left(ServerFailure('Ошибка при авторизации: $message'));
       }
     } else {
       return Left(NetworkFailure());
@@ -53,13 +55,31 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
         if (regResult == 'success') {
           final creationResult = await remoteDatasource.createUser(email);
           await localDatasource.setJwt(creationResult);
+
           return const Right('success');
         } else {
           return Left(ServerFailure('Ошибка при авторизации'));
         }
       } catch (e) {
         print('Register User $e');
-        return Left(ServerFailure('Ошибка при авторизации'));
+        String message = e is FirebaseAuthException ? e.code : '';
+        return Left(ServerFailure('Ошибка при авторизации: $message'));
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> signOut() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDatasource.signOut();
+        await localDatasource.setJwt('');
+        return Right(result);
+      } catch (e) {
+        String message = e is FirebaseAuthException ? e.code : '';
+        return Left(ServerFailure('Ошибка при выходе: $message'));
       }
     } else {
       return Left(NetworkFailure());

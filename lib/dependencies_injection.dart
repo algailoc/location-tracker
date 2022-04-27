@@ -1,9 +1,13 @@
 import 'package:firebase_tracker/core/network/network_info.dart';
 import 'package:firebase_tracker/data/datasources/local_datasource.dart';
 import 'package:firebase_tracker/data/datasources/remote_datasource.dart';
+import 'package:firebase_tracker/data/repostitories/authorization_repository_impl.dart';
 import 'package:firebase_tracker/data/repostitories/users_repository_impl.dart';
+import 'package:firebase_tracker/domain/repositories/authorization_repository.dart';
 import 'package:firebase_tracker/domain/repositories/users_repository.dart';
+import 'package:firebase_tracker/domain/usecases/authorization_usecases.dart';
 import 'package:firebase_tracker/domain/usecases/users_usecases.dart';
+import 'package:firebase_tracker/presentation/bloc/authorization_bloc/authorization_bloc.dart';
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +23,16 @@ Future<void> init() async {
         remoteDatasource: sl(),
         networkInfo: sl(),
       ));
+
+  // Auth Bloc
+  sl.registerFactory(() => AuthorizationBloc(sl()));
+  sl.registerLazySingleton(() => AuthorizationUsecases(sl()));
+  sl.registerLazySingleton<AuthorizationRepository>(
+      () => AuthorizationRepositoryImpl(
+            localDatasource: sl(),
+            remoteDatasource: sl(),
+            networkInfo: sl(),
+          ));
 
   // Misc
   SharedPreferences preferences = await SharedPreferences.getInstance();

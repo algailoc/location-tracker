@@ -16,7 +16,7 @@ class LocalDatasourceImpl extends LocalDatasource {
     if (result == null || result.isEmpty) {
       return '';
     } else {
-      return 'sQbVfRGbqA2kwBLlh7eU';
+      return result;
     }
   }
 
@@ -24,9 +24,9 @@ class LocalDatasourceImpl extends LocalDatasource {
   Future<String> setJwt(String jwt) async {
     final result = await preferences.setString('jwt', jwt);
     if (result) {
-      return 'sQbVfRGbqA2kwBLlh7eU';
+      return jwt;
     } else {
-      return 'sQbVfRGbqA2kwBLlh7eU';
+      return jwt;
     }
   }
 }

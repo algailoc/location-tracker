@@ -21,4 +21,8 @@ class AuthorizationUsecases {
   Future<bool> checkLocalUser() async {
     return await repository.checkLocalUser();
   }
+
+  Future<Either<Failure, String>> signOut() async {
+    return await repository.signOut();
+  }
 }

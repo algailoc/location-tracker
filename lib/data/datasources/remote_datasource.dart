@@ -1,34 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_tracker/core/errors/exceptions.dart';
 import 'package:firebase_tracker/data/models/user_model.dart';
 
-import '../../domain/entites/user.dart';
+import '../../domain/entites/user.dart' as User;
 import 'package:uuid/uuid.dart';
 
 abstract class RemoteDatasource {
   // Users Bloc
-  Future<User> addFriend(String jwt, String friendId);
-  Future<User> approveFriend(String jwt, String friendId);
-  Future<User> deleteFriend(String jwt, String friendId);
-  Future<User> updateCoordinates(String jwt, double lat, double long);
+  Future<User.User> addFriend(String jwt, String friendId);
+  Future<User.User> approveFriend(String jwt, String friendId);
+  Future<User.User> deleteFriend(String jwt, String friendId);
+  Future<User.User> updateCoordinates(String jwt, double lat, double long);
 
   // Auth Bloc
   Future<String> getUserJwt(String email);
   Future<String> createUser(String email);
   Future<String> registerUser(String email, String password);
   Future<String> authorizeUser(String email, String password);
+  Future<String> signOut();
 
   // Misc
-  Future<User> getUser(String jwt);
-  Future<List<User>> getAllUsers(String jwt);
+  Future<User.User> getUser(String jwt);
+  Future<List<User.User>> getAllUsers(String jwt);
 }
 
 class RemoteDatacourceImpl extends RemoteDatasource {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
-  Future<List<User>> getAllUsers(String jwt) async {
-    List<User> result = [];
+  Future<List<User.User>> getAllUsers(String jwt) async {
+    List<User.User> result = [];
     if (jwt.isNotEmpty) {
       await users.get().then((value) {
         if (value.docs.isNotEmpty) {
@@ -44,7 +47,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> addFriend(String jwt, String friendId) async {
+  Future<User.User> addFriend(String jwt, String friendId) async {
     late String friendPath;
     late UserModel user;
     late UserModel friend;
@@ -94,7 +97,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> approveFriend(String jwt, String friendId) async {
+  Future<User.User> approveFriend(String jwt, String friendId) async {
     // change user's friend with frendId approved to true
     // get all users
     // find user with friendId
@@ -139,7 +142,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> deleteFriend(String jwt, String friendId) async {
+  Future<User.User> deleteFriend(String jwt, String friendId) async {
     late String friendPath;
     late UserModel user;
     late UserModel friend;
@@ -178,7 +181,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> getUser(String jwt) async {
+  Future<User.User> getUser(String jwt) async {
     late UserModel user;
     await users
         .doc(jwt)
@@ -213,7 +216,8 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> updateCoordinates(String jwt, double lat, double long) async {
+  Future<User.User> updateCoordinates(
+      String jwt, double lat, double long) async {
     users.doc(jwt).update({'lat': lat, 'long': long});
 
     late UserModel newUser;
@@ -228,12 +232,21 @@ class RemoteDatacourceImpl extends RemoteDatasource {
 
   @override
   Future<String> authorizeUser(String email, String password) async {
-    //TODO: authorization
+    UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
     return 'success';
   }
 
   @override
   Future<String> registerUser(String email, String password) async {
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+    return 'success';
+  }
+
+  @override
+  Future<String> signOut() async {
+    await FirebaseAuth.instance.signOut();
     return 'success';
   }
 }
