@@ -29,7 +29,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
             MaterialPageRoute(builder: (context) => const MainScreen()));
       });
     } else if (state is LocalUserChecked) {
-      print('LOCAL USER FOUND?: ${state.localUserFound}');
       if (!state.localUserFound) {
         Timer(const Duration(seconds: 3), () {
           Navigator.of(context).pushReplacement(MaterialPageRoute(

@@ -13,6 +13,11 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   late User user;
 
   UsersBloc({required this.usecases}) : super(UsersInitial()) {
+    bool isUserFriend(User element) {
+      final tempFriends = user.friends.where((el) => el.id == element.id);
+      return tempFriends.isNotEmpty;
+    }
+
     on<UsersEvent>((event, emit) async {
       if (event is GetUserData) {
         final result = await usecases.getUser();
@@ -29,6 +34,8 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           emit(UsersErrorState(
               users: users, user: user, message: error.message));
         }, (success) {
+          success = success.where((element) => element.id != user.id).toList();
+          success = success.where((element) => !isUserFriend(element)).toList();
           users = success;
           emit(UsersLoadedState(users: users, user: user));
         });
@@ -39,7 +46,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
               users: users, user: user, message: error.message));
         }, (success) {
           user = success;
-          emit(UsersLoadedState(users: users, user: user));
+          emit(FriendAddedState(users: users, user: user));
         });
       } else if (event is ApproveFriend) {
         final result = await usecases.approveFriend(event.friendId);

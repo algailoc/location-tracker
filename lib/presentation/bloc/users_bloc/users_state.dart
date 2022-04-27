@@ -28,3 +28,8 @@ class UsersErrorState extends UsersState {
       {required List<User>? users, required User? user, required this.message})
       : super(users: users, user: user);
 }
+
+class FriendAddedState extends UsersState {
+  const FriendAddedState({required List<User>? users, required User? user})
+      : super(users: users, user: user);
+}

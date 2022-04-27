@@ -1,5 +1,7 @@
+import 'package:firebase_tracker/core/utils/show_custom_snackbar.dart';
 import 'package:firebase_tracker/presentation/bloc/authorization_bloc/authorization_bloc.dart';
 import 'package:firebase_tracker/presentation/screens/main_screen.dart/main_screen.dart';
+import 'package:firebase_tracker/presentation/widgets/general/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,25 +36,23 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   void authorizationBlocListener(
       BuildContext context, AuthorizationState state) {
     if (state is UserAuthorized) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const MainScreen()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const MainScreen()));
     }
     if (state is AuthorizationError) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(state.error)));
+      showCustomSnackBar(context, state.error, type: SnackBarType.error);
     }
-    if (state is AuthorizationInitial) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Разлогинено')));
-    }
+    if (state is AuthorizationInitial) {}
+  }
+
+  bool isButtonDisabled() {
+    return emailController.text.isEmpty || passwordController.text.isEmpty;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tracker App'),
-      ),
+      appBar: const CustomAppBar(title: 'Tracker App'),
       body: BlocListener<AuthorizationBloc, AuthorizationState>(
         listener: authorizationBlocListener,
         child: Container(
@@ -62,16 +62,34 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
             children: [
               TextField(
                 controller: emailController,
+                onChanged: (_) => setState(() {}),
                 decoration: const InputDecoration(helperText: 'Почта'),
               ),
               TextField(
                 controller: passwordController,
+                onChanged: (_) => setState(() {}),
                 decoration: const InputDecoration(helperText: 'Пароль'),
               ),
               const Spacer(),
-              TextButton(
-                  onPressed: signUp, child: const Text('Зарегистрироваться')),
-              TextButton(onPressed: signIn, child: const Text('Войти'))
+              ElevatedButton(
+                onPressed: isButtonDisabled() ? null : signUp,
+                child: const Text('Зарегистрироваться'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(isButtonDisabled()
+                      ? Colors.grey
+                      : Theme.of(context).colorScheme.primary),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: isButtonDisabled() ? null : signIn,
+                child: const Text('Войти'),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                  isButtonDisabled()
+                      ? Colors.grey
+                      : Theme.of(context).colorScheme.primary,
+                )),
+              )
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:firebase_tracker/core/themes/app_themes.dart';
 import 'package:firebase_tracker/firebase.dart';
 import 'package:firebase_tracker/presentation/bloc/authorization_bloc/authorization_bloc.dart';
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
@@ -29,9 +30,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: appThemeData[AppTheme.Light],
         home: const LoadingScreen(),
       ),
     );

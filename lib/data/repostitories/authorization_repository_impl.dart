@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_tracker/core/errors/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_tracker/core/network/network_info.dart';
+import 'package:firebase_tracker/core/utils/auth_error_handler.dart';
 import 'package:firebase_tracker/data/datasources/local_datasource.dart';
 import 'package:firebase_tracker/data/datasources/remote_datasource.dart';
 import 'package:firebase_tracker/domain/repositories/authorization_repository.dart';
@@ -38,7 +39,8 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
         }
       } catch (e) {
         print('Authorize User $e');
-        String message = e is FirebaseAuthException ? e.code : '';
+        String message =
+            e is FirebaseAuthException ? mapErrorToMessage(e.code) : '';
         return Left(ServerFailure('Ошибка при авторизации: $message'));
       }
     } else {
@@ -62,7 +64,8 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
         }
       } catch (e) {
         print('Register User $e');
-        String message = e is FirebaseAuthException ? e.code : '';
+        String message =
+            e is FirebaseAuthException ? mapErrorToMessage(e.code) : '';
         return Left(ServerFailure('Ошибка при авторизации: $message'));
       }
     } else {
@@ -78,7 +81,8 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
         await localDatasource.setJwt('');
         return Right(result);
       } catch (e) {
-        String message = e is FirebaseAuthException ? e.code : '';
+        String message =
+            e is FirebaseAuthException ? mapErrorToMessage(e.code) : '';
         return Left(ServerFailure('Ошибка при выходе: $message'));
       }
     } else {
