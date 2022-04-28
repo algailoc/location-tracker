@@ -10,7 +10,7 @@ abstract class RemoteDatasource {
   // Users Bloc
   Future<User> addFriend(String jwt, String friendId);
   Future<User> approveFriend(String jwt, Friend friend);
-  Future<User> deleteFriend(String jwt, Friend friend);
+  Future<User> deleteFriend(String jwt, Friend friendToDelete);
   Future<User> updateCoordinates(String jwt, double lat, double long);
 
   // Auth Bloc
@@ -61,32 +61,20 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       friendPath = value.docs.first.id;
       friend = UserModel.fromJson(value.docs.first.data() as dynamic);
     });
-    // bool hasUser = user.friends
-    //     .where((element) => element.email == friend.email)
-    //     .isNotEmpty;
-    // if (hasUser) {
     // add friend2 to user1's friends
-    // await users.doc(jwt).update({
-    //   'friends': FieldValue.arrayRemove([friend.toJson()]),
-    // });
 
     await users.doc(jwt).update({
       'friends': FieldValue.arrayUnion([
+        // {'id': friendId, 'approved': false, 'initializer': false}
         {'id': friendId, 'approved': false, 'initializer': true}
       ]),
     });
     // add user1 to user2's friends
-    // await users.doc(friendPath).update({
-    //   'friends': FieldValue.arrayRemove(
-    //       [user.copyWith(approved: false, initializer: false).toJson()]),
-    // });
-
     await users.doc(friendPath).update({
       'friends': FieldValue.arrayUnion([
         {'id': user.id, 'approved': false, 'initializer': false}
       ]),
     });
-    // }
 
     late UserModel newUser;
 
@@ -118,11 +106,6 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       friendPath = value.docs.first.id;
       friend = UserModel.fromJson(value.docs.first.data() as dynamic);
     });
-    // bool hasUser = user.friends
-    //     .where((element) => element.email == friend.email)
-    //     .isNotEmpty;
-
-    // if (hasUser) {
     // add user1 to user2's friends
     // add friend2 to user1's friends
     await users.doc(jwt).update({
@@ -144,7 +127,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       ]),
     });
     // add user1 to user2's friends
-    await users.doc(jwt).update({
+    await users.doc(friendPath).update({
       'friends': FieldValue.arrayRemove([
         {
           'id': user.id,
@@ -162,7 +145,6 @@ class RemoteDatacourceImpl extends RemoteDatasource {
         }
       ])
     });
-    // }
     late UserModel newUser;
 
     await users
@@ -188,10 +170,6 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       friendPath = value.docs.first.id;
       friend = UserModel.fromJson(value.docs.first.data() as dynamic);
     });
-    // bool hasUser = user.friends
-    //     .where((element) => element.email == friend.email)
-    //     .isNotEmpty;
-    // if (hasUser) {
     // add friend2 to user1's friends
     await users.doc(jwt).update({
       'friends': FieldValue.arrayRemove([
@@ -212,7 +190,6 @@ class RemoteDatacourceImpl extends RemoteDatasource {
         }
       ])
     });
-    // }
 
     late UserModel newUser;
 

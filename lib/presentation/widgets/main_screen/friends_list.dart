@@ -112,8 +112,10 @@ class FriendsList extends StatelessWidget {
                                     state.user!.friends[index].id,
                                     style: const TextStyle(fontSize: 16),
                                   ),
-                                  if (!state.user!.friends[index].approved &&
-                                      !state.user!.friends[index].initializer)
+                                  if (!state.user!.friends[index].approved
+                                  //  &&
+                                  //     !state.user!.friends[index].initializer
+                                  )
                                     IconButton(
                                         tooltip: 'Одобрить',
                                         onPressed: () => approveFriend(context,
