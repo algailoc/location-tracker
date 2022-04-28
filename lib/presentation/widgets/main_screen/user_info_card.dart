@@ -33,9 +33,12 @@ class UserInfoCard extends StatelessWidget {
                           state.user!.email,
                           style: const TextStyle(fontSize: 16),
                         ),
-                        Text(
-                          'Ваши координаты: ${state.user!.lat}  ${state.user!.long}',
-                          style: const TextStyle(fontSize: 16),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Text(
+                            'Ваши координаты: ${state.user!.lat}  ${state.user!.long}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
                         ),
                       ],
                     ),

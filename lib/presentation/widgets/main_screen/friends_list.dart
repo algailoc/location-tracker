@@ -69,6 +69,12 @@ class FriendsList extends StatelessWidget {
 
   void showFriendOnMap(BuildContext context, User friend) {}
 
+  User getFriend(BuildContext context, String id) {
+    List<User> list = BlocProvider.of<UsersBloc>(context).users;
+    list = list.where((element) => element.id == id).toList();
+    return list.first;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -83,54 +89,69 @@ class FriendsList extends StatelessWidget {
                   'Ваши друзья:',
                   style: TextStyle(fontSize: 20),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: state.user?.friends.length ?? 0,
-                    shrinkWrap: true,
-                    itemBuilder: ((context, index) => Dismissible(
-                          onDismissed: (_) =>
-                              deleteFriend(context, state.user!.friends[index]),
-                          confirmDismiss: (_) => showConfirmationModal(context),
-                          secondaryBackground: Container(
-                            color: Colors.red,
-                          ),
-                          background: Container(
-                            color: Colors.transparent,
-                          ),
-                          key: UniqueKey(),
-                          direction: DismissDirection.endToStart,
-                          child: Card(
-                            elevation: 5,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 8),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    state.user!.friends[index].id,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  if (!state.user!.friends[index].approved
-                                  //  &&
-                                  //     !state.user!.friends[index].initializer
-                                  )
-                                    IconButton(
-                                        tooltip: 'Одобрить',
-                                        onPressed: () => approveFriend(context,
-                                            state.user!.friends[index]),
-                                        icon: const Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                        ))
-                                ],
+                if (state.users != null && state.users!.isNotEmpty)
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.user?.friends.length ?? 0,
+                      shrinkWrap: true,
+                      itemBuilder: ((context, index) => Dismissible(
+                            onDismissed: (_) => deleteFriend(
+                                context, state.user!.friends[index]),
+                            confirmDismiss: (_) =>
+                                showConfirmationModal(context),
+                            secondaryBackground: Container(
+                              color: Colors.red,
+                            ),
+                            background: Container(
+                              color: Colors.transparent,
+                            ),
+                            key: UniqueKey(),
+                            direction: DismissDirection.endToStart,
+                            child: Card(
+                              elevation: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      getFriend(context,
+                                              state.user!.friends[index].id)
+                                          .email,
+                                      // state.user!.friends[index].id,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    if (!state.user!.friends[index].approved &&
+                                        !state.user!.friends[index].initializer)
+                                      IconButton(
+                                          tooltip: 'Одобрить',
+                                          onPressed: () => approveFriend(
+                                              context,
+                                              state.user!.friends[index]),
+                                          icon: const Icon(
+                                            Icons.check_circle,
+                                            color: Colors.green,
+                                          )),
+                                    if (!state.user!.friends[index]
+                                        .approved) //TODO: remove !
+                                      IconButton(
+                                          tooltip: 'Координаты',
+                                          onPressed: () => showFriendOnMap(
+                                              context,
+                                              getFriend(
+                                                  context,
+                                                  state.user!.friends[index]
+                                                      .id)),
+                                          icon: const Icon(Icons.map)),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )),
-                  ),
-                )
+                          )),
+                    ),
+                  )
               ],
             );
           },

@@ -35,7 +35,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
               users: users, user: user, message: error.message));
         }, (success) {
           success = success.where((element) => element.id != user.id).toList();
-          success = success.where((element) => !isUserFriend(element)).toList();
+          // success = success.where((element) => !isUserFriend(element)).toList();
           users = success;
           emit(UsersLoadedState(users: users, user: user));
         });
@@ -59,6 +59,15 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
         });
       } else if (event is DeleteFriend) {
         final result = await usecases.deleteFriend(event.friend);
+        result.fold((error) {
+          emit(UsersErrorState(
+              users: users, user: user, message: error.message));
+        }, (success) {
+          user = success;
+          emit(UsersLoadedState(users: users, user: user));
+        });
+      } else if (event is UpdateCoordinates) {
+        final result = await usecases.updateCoordinates(event.lat, event.long);
         result.fold((error) {
           emit(UsersErrorState(
               users: users, user: user, message: error.message));
