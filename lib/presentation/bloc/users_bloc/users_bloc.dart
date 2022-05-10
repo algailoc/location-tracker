@@ -13,11 +13,6 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   late User user;
 
   UsersBloc({required this.usecases}) : super(UsersInitial()) {
-    bool isUserFriend(User element) {
-      final tempFriends = user.friends.where((el) => el.id == element.id);
-      return tempFriends.isNotEmpty;
-    }
-
     on<UsersEvent>((event, emit) async {
       if (event is GetUserData) {
         final result = await usecases.getUser();

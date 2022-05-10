@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_tracker/core/utils/show_custom_snackbar.dart';
 import 'package:firebase_tracker/presentation/bloc/authorization_bloc/authorization_bloc.dart';
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
+import 'package:firebase_tracker/presentation/screens/all_users_list_screen/all_users_list_screen.dart';
 import 'package:firebase_tracker/presentation/screens/loading_screen/loading_screen.dart';
 import 'package:firebase_tracker/presentation/widgets/main_screen/friends_list.dart';
 import 'package:firebase_tracker/presentation/widgets/main_screen/user_info_card.dart';
@@ -44,13 +45,14 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void usersBlocListener(BuildContext context, UsersState state) {
-    if (state is UsersLoadedState && state.users!.isEmpty) {
+    if (state is UsersLoadedState && state.users.isEmpty) {
       BlocProvider.of<UsersBloc>(context).add(GetAllUsers());
     }
   }
 
   void goToAddUserPage() {
-    // BlocProvider.of<UsersBloc>(context).add(AddFriend('2'));
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const AllUsersListScreen()));
   }
 
   void updateCoordinatesListener() async {

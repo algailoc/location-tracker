@@ -20,8 +20,8 @@ class UsersRepositoryImpl extends UsersRepository {
   Future<Either<Failure, User>> addFriend(String friendId) async {
     if (await networkInfo.isConnected) {
       try {
-        final String jwt = localDatasource.getJwt();
-        final response = await remoteDatasource.addFriend(jwt, friendId);
+        final String userToken = localDatasource.getUserToken();
+        final response = await remoteDatasource.addFriend(userToken, friendId);
         return Right(response);
       } catch (e) {
         print('Add Friend $e');
@@ -36,8 +36,8 @@ class UsersRepositoryImpl extends UsersRepository {
   Future<Either<Failure, List<User>>> getAllUsers() async {
     if (await networkInfo.isConnected) {
       try {
-        final String jwt = localDatasource.getJwt();
-        final response = await remoteDatasource.getAllUsers(jwt);
+        final String userToken = localDatasource.getUserToken();
+        final response = await remoteDatasource.getAllUsers(userToken);
         return Right(response);
       } catch (e) {
         print('Get All Users $e');
@@ -52,8 +52,8 @@ class UsersRepositoryImpl extends UsersRepository {
   Future<Either<Failure, User>> getUser() async {
     if (await networkInfo.isConnected) {
       try {
-        final String jwt = localDatasource.getJwt();
-        final response = await remoteDatasource.getUser(jwt);
+        final String userToken = localDatasource.getUserToken();
+        final response = await remoteDatasource.getUser(userToken);
         return Right(response);
       } catch (e) {
         print('Get User $e');
@@ -68,8 +68,9 @@ class UsersRepositoryImpl extends UsersRepository {
   Future<Either<Failure, User>> approveFriend(Friend friend) async {
     if (await networkInfo.isConnected) {
       try {
-        final String jwt = localDatasource.getJwt();
-        final response = await remoteDatasource.approveFriend(jwt, friend);
+        final String userToken = localDatasource.getUserToken();
+        final response =
+            await remoteDatasource.approveFriend(userToken, friend);
         return Right(response);
       } catch (e) {
         print('Approve Friend $e');
@@ -84,8 +85,8 @@ class UsersRepositoryImpl extends UsersRepository {
   Future<Either<Failure, User>> deleteFriend(Friend friend) async {
     if (await networkInfo.isConnected) {
       try {
-        final String jwt = localDatasource.getJwt();
-        final response = await remoteDatasource.deleteFriend(jwt, friend);
+        final String userToken = localDatasource.getUserToken();
+        final response = await remoteDatasource.deleteFriend(userToken, friend);
         return Right(response);
       } catch (e) {
         print('Delete Friend $e');
@@ -101,9 +102,9 @@ class UsersRepositoryImpl extends UsersRepository {
       double lat, double long) async {
     if (await networkInfo.isConnected) {
       try {
-        final String jwt = localDatasource.getJwt();
+        final String userToken = localDatasource.getUserToken();
         final response =
-            await remoteDatasource.updateCoordinates(jwt, lat, long);
+            await remoteDatasource.updateCoordinates(userToken, lat, long);
         return Right(response);
       } catch (e) {
         print('Update coordinates $e');

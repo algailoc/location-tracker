@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDatasource {
-  String getJwt();
-  Future<String> setJwt(String jwt);
+  String getUserToken();
+  Future<String> setUserToken(String userToken);
 }
 
 class LocalDatasourceImpl extends LocalDatasource {
@@ -11,8 +11,8 @@ class LocalDatasourceImpl extends LocalDatasource {
   LocalDatasourceImpl(this.preferences);
 
   @override
-  String getJwt() {
-    final result = preferences.getString('jwt');
+  String getUserToken() {
+    final result = preferences.getString('userToken');
     if (result == null || result.isEmpty) {
       return '';
     } else {
@@ -21,12 +21,12 @@ class LocalDatasourceImpl extends LocalDatasource {
   }
 
   @override
-  Future<String> setJwt(String jwt) async {
-    final result = await preferences.setString('jwt', jwt);
+  Future<String> setUserToken(String userToken) async {
+    final result = await preferences.setString('userToken', userToken);
     if (result) {
-      return jwt;
+      return userToken;
     } else {
-      return jwt;
+      return userToken;
     }
   }
 }

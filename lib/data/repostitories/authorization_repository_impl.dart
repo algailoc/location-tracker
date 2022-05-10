@@ -19,7 +19,7 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
 
   @override
   Future<bool> checkLocalUser() async {
-    final result = localDatasource.getJwt();
+    final result = localDatasource.getUserToken();
     return result.isNotEmpty;
   }
 
@@ -31,8 +31,8 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
         final authResult =
             await remoteDatasource.authorizeUser(email, password);
         if (authResult == 'success') {
-          final creationResult = await remoteDatasource.getUserJwt(email);
-          await localDatasource.setJwt(creationResult);
+          final creationResult = await remoteDatasource.getUserUserToken(email);
+          await localDatasource.setUserToken(creationResult);
           return const Right('success');
         } else {
           return Left(ServerFailure('Ошибка при авторизации'));
@@ -56,7 +56,7 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
         final regResult = await remoteDatasource.registerUser(email, password);
         if (regResult == 'success') {
           final creationResult = await remoteDatasource.createUser(email);
-          await localDatasource.setJwt(creationResult);
+          await localDatasource.setUserToken(creationResult);
 
           return const Right('success');
         } else {
@@ -78,7 +78,7 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
     if (await networkInfo.isConnected) {
       try {
         final result = await remoteDatasource.signOut();
-        await localDatasource.setJwt('');
+        await localDatasource.setUserToken('');
         return Right(result);
       } catch (e) {
         String message =

@@ -8,21 +8,21 @@ import 'package:uuid/uuid.dart';
 
 abstract class RemoteDatasource {
   // Users Bloc
-  Future<User> addFriend(String jwt, String friendId);
-  Future<User> approveFriend(String jwt, Friend friendToApprove);
-  Future<User> deleteFriend(String jwt, Friend friendToDelete);
-  Future<User> updateCoordinates(String jwt, double lat, double long);
+  Future<User> addFriend(String userToken, String friendId);
+  Future<User> approveFriend(String userToken, Friend friendToApprove);
+  Future<User> deleteFriend(String userToken, Friend friendToDelete);
+  Future<User> updateCoordinates(String userToken, double lat, double long);
 
   // Auth Bloc
-  Future<String> getUserJwt(String email);
+  Future<String> getUserUserToken(String email);
   Future<String> createUser(String email);
   Future<String> registerUser(String email, String password);
   Future<String> authorizeUser(String email, String password);
   Future<String> signOut();
 
   // Misc
-  Future<User> getUser(String jwt);
-  Future<List<User>> getAllUsers(String jwt);
+  Future<User> getUser(String userToken);
+  Future<List<User>> getAllUsers(String userToken);
 }
 
 class RemoteDatacourceImpl extends RemoteDatasource {
@@ -30,9 +30,9 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   firebaseAuth.FirebaseAuth auth = firebaseAuth.FirebaseAuth.instance;
 
   @override
-  Future<List<User>> getAllUsers(String jwt) async {
+  Future<List<User>> getAllUsers(String userToken) async {
     List<User> result = [];
-    if (jwt.isNotEmpty) {
+    if (userToken.isNotEmpty) {
       await users.get().then((value) {
         if (value.docs.isNotEmpty) {
           value.docs.forEach((e) {
@@ -47,12 +47,12 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> addFriend(String jwt, String friendId) async {
+  Future<User> addFriend(String userToken, String friendId) async {
     late String friendPath;
     late UserModel user;
 
     // find user with userId(user1)
-    await users.doc(jwt).get().then((value) {
+    await users.doc(userToken).get().then((value) {
       user = UserModel.fromJson(value.data() as dynamic);
     });
     // find user with friendId(user2)
@@ -61,7 +61,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     });
     // add friend2 to user1's friends
 
-    await users.doc(jwt).update({
+    await users.doc(userToken).update({
       'friends': FieldValue.arrayUnion([
         // {'id': friendId, 'approved': false, 'initializer': false}
         {'id': friendId, 'approved': false, 'initializer': true}
@@ -77,7 +77,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     late UserModel newUser;
 
     await users
-        .doc(jwt)
+        .doc(userToken)
         .get()
         .then((value) => newUser = UserModel.fromJson(value.data() as dynamic));
 
@@ -85,7 +85,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> approveFriend(String jwt, Friend friendToApprove) async {
+  Future<User> approveFriend(String userToken, Friend friendToApprove) async {
     // change user's friend with frendId approved to true
     // get all users
     // find user with friendId
@@ -95,7 +95,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     late UserModel user;
 
     // find user with userId(user1)
-    await users.doc(jwt).get().then((value) {
+    await users.doc(userToken).get().then((value) {
       user = UserModel.fromJson(value.data() as dynamic);
     });
     // find user with friendId(user2)
@@ -104,7 +104,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     });
     // add user1 to user2's friends
     // add friend2 to user1's friends
-    await users.doc(jwt).update({
+    await users.doc(userToken).update({
       'friends': FieldValue.arrayRemove([
         {
           'id': friendToApprove.id,
@@ -113,7 +113,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
         }
       ]),
     });
-    await users.doc(jwt).update({
+    await users.doc(userToken).update({
       'friends': FieldValue.arrayUnion([
         {
           'id': friendToApprove.id,
@@ -144,7 +144,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     late UserModel newUser;
 
     await users
-        .doc(jwt)
+        .doc(userToken)
         .get()
         .then((value) => newUser = UserModel.fromJson(value.data() as dynamic));
 
@@ -152,12 +152,12 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> deleteFriend(String jwt, Friend friendToDelete) async {
+  Future<User> deleteFriend(String userToken, Friend friendToDelete) async {
     late String friendPath;
     late UserModel user;
 
     // find user with userId(user1)
-    await users.doc(jwt).get().then((value) {
+    await users.doc(userToken).get().then((value) {
       user = UserModel.fromJson(value.data() as dynamic);
     });
     // find user with friendId(user2)
@@ -165,7 +165,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
       friendPath = value.docs.first.id;
     });
     // add friend2 to user1's friends
-    await users.doc(jwt).update({
+    await users.doc(userToken).update({
       'friends': FieldValue.arrayRemove([
         {
           'id': friendToDelete.id,
@@ -188,7 +188,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     late UserModel newUser;
 
     await users
-        .doc(jwt)
+        .doc(userToken)
         .get()
         .then((value) => newUser = UserModel.fromJson(value.data() as dynamic));
 
@@ -196,10 +196,10 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> getUser(String jwt) async {
+  Future<User> getUser(String userToken) async {
     late UserModel user;
     await users
-        .doc(jwt)
+        .doc(userToken)
         .get()
         .then((value) => user = UserModel.fromJson(value.data() as dynamic));
 
@@ -209,7 +209,7 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   @override
 
   /// After logging in
-  Future<String> getUserJwt(String email) async {
+  Future<String> getUserUserToken(String email) async {
     late String result;
 
     await users.where('name', isEqualTo: email).get().then((value) {
@@ -232,12 +232,13 @@ class RemoteDatacourceImpl extends RemoteDatasource {
   }
 
   @override
-  Future<User> updateCoordinates(String jwt, double lat, double long) async {
-    users.doc(jwt).update({'lat': lat, 'long': long});
+  Future<User> updateCoordinates(
+      String userToken, double lat, double long) async {
+    users.doc(userToken).update({'lat': lat, 'long': long});
     late UserModel newUser;
 
     await users
-        .doc(jwt)
+        .doc(userToken)
         .get()
         .then((value) => newUser = UserModel.fromJson(value.data() as dynamic));
 

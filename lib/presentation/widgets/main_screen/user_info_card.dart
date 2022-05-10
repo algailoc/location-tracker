@@ -1,11 +1,15 @@
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
+import 'package:firebase_tracker/presentation/screens/map_screen.dart/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserInfoCard extends StatelessWidget {
   const UserInfoCard({Key? key}) : super(key: key);
 
-  void openMap(BuildContext context, double lat, double long) {}
+  void openMap(BuildContext context, double lat, double long) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => MapScreen(lat: lat, long: long)));
+  }
 
   @override
   Widget build(BuildContext context) {

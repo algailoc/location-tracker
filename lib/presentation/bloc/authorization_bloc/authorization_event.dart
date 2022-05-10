@@ -3,7 +3,7 @@ part of 'authorization_bloc.dart';
 @immutable
 abstract class AuthorizationEvent {}
 
-/// Checks if there is jwt in local storage.
+/// Checks if there is userToken in local storage.
 /// If yes, then go to main screen and there in initState launch getUser.
 /// If no, then go to authorization screen.
 class CheckLocalUser extends AuthorizationEvent {}

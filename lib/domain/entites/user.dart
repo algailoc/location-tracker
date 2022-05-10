@@ -22,4 +22,4 @@ abstract class User {
   });
 }
 
-// {password: 123, jwt: 1, name: olya, id: 1, lat: 0, friends: [{approved: true, name: qwert, id: 2, lat: 0, long: 0}], long: 0}
+// {password: 123, userToken: 1, name: olya, id: 1, lat: 0, friends: [{approved: true, name: qwert, id: 2, lat: 0, long: 0}], long: 0}
