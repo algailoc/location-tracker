@@ -21,6 +21,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late Timer updateUsersTimer;
   late StreamSubscription<Position> positionStream;
 
   @override
@@ -30,6 +31,11 @@ class _MainScreenState extends State<MainScreen> {
       BlocProvider.of<UsersBloc>(context).add(GetUserData());
     }
     updateCoordinatesListener();
+    updateUsersTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      if (BlocProvider.of<UsersBloc>(context).state.user != null) {
+        BlocProvider.of<UsersBloc>(context).add(GetAllUsers());
+      }
+    });
   }
 
   void logOut() {
@@ -71,6 +77,7 @@ class _MainScreenState extends State<MainScreen> {
           Geolocator.getPositionStream(locationSettings: locationSettings)
               .listen((Position? position) {
         if (position != null &&
+            BlocProvider.of<UsersBloc>(context).user != null &&
             BlocProvider.of<UsersBloc>(context).user.id.isNotEmpty) {
           updateUserCoordinates();
         }
@@ -128,6 +135,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     if (positionStream != null) positionStream.cancel();
+    if (updateUsersTimer != null) updateUsersTimer.cancel();
     super.dispose();
   }
 }
