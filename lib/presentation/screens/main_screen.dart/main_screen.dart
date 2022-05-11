@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../widgets/general/custom_app_bar.dart';
+import '../../widgets/main_screen/app_settings_menu.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -86,46 +87,53 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void updateUserCoordinates() async {
-    // LocationPermission permission;
+    LocationPermission permission;
 
-    // permission = await Geolocator.requestPermission();
-    // if (permission == LocationPermission.denied ||
-    //     permission == LocationPermission.deniedForever) {
-    //   showCustomSnackBar(context,
-    //       'Для обновления позиции необходимо разрешить доступ к геолокации',
-    //       type: SnackBarType.error);
-    // } else {
-    Position position = await Geolocator.getCurrentPosition();
-    BlocProvider.of<UsersBloc>(context)
-        .add(UpdateCoordinates(position.latitude, position.longitude));
-    // }
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      showCustomSnackBar(context,
+          'Для обновления позиции необходимо разрешить доступ к геолокации',
+          type: SnackBarType.error);
+    } else {
+      Position position = await Geolocator.getCurrentPosition();
+      BlocProvider.of<UsersBloc>(context)
+          .add(UpdateCoordinates(position.latitude, position.longitude));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<UsersBloc, UsersState>(
-          listener: usersBlocListener,
-        ),
-        BlocListener<AuthorizationBloc, AuthorizationState>(
-          listener: authorizationBlocListener,
-        ),
-      ],
-      child: Scaffold(
-        appBar: const CustomAppBar(title: 'Tracker App'),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Column(
-            children: const [
-              UserInfoCard(),
-              FriendsList(),
-            ],
+    return GestureDetector(
+      onTap: () {
+        if (settingsSheetKey.currentState != null) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<UsersBloc, UsersState>(
+            listener: usersBlocListener,
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: goToAddUserPage,
-          child: const Icon(Icons.add),
+          BlocListener<AuthorizationBloc, AuthorizationState>(
+            listener: authorizationBlocListener,
+          ),
+        ],
+        child: Scaffold(
+          appBar: const CustomAppBar(title: 'Tracker App', hasSettings: true),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Column(
+              children: const [
+                UserInfoCard(),
+                FriendsList(),
+              ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: goToAddUserPage,
+            child: const Icon(Icons.add),
+          ),
         ),
       ),
     );

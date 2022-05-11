@@ -16,5 +16,18 @@ final appThemeData = {
           surface: Colors.white,
           onSurface: Colors.black),
       textTheme: const TextTheme()),
-  AppTheme.Dark: ThemeData(),
+  AppTheme.Dark: ThemeData(
+      colorScheme: const ColorScheme(
+          brightness: Brightness.dark,
+          primary: Colors.teal,
+          onPrimary: Colors.black,
+          secondary: Colors.black,
+          onSecondary: Colors.white,
+          error: Colors.red,
+          onError: Colors.red,
+          background: Colors.black,
+          onBackground: Colors.white,
+          surface: Colors.black,
+          onSurface: Colors.white),
+      textTheme: const TextTheme()),
 };
