@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_tracker/presentation/bloc/app_settings_bloc/app_settings_bloc.dart';
 import 'package:firebase_tracker/presentation/screens/authorization_screen/authorization_screen.dart';
 import 'package:firebase_tracker/presentation/screens/main_screen.dart/main_screen.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<AuthorizationBloc>(context).add(CheckLocalUser());
+    BlocProvider.of<AppSettingsBloc>(context).add(GetAppSettingsEvent());
   }
 
   void authorizationBlocListener(

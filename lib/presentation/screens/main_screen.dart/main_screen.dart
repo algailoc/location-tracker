@@ -77,7 +77,6 @@ class _MainScreenState extends State<MainScreen> {
           Geolocator.getPositionStream(locationSettings: locationSettings)
               .listen((Position? position) {
         if (position != null &&
-            BlocProvider.of<UsersBloc>(context).user != null &&
             BlocProvider.of<UsersBloc>(context).user.id.isNotEmpty) {
           updateUserCoordinates();
         }
