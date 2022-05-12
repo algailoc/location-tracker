@@ -39,7 +39,7 @@ class UserInfoCard extends StatelessWidget {
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.5,
-                          child: Text(
+                          child: SelectableText(
                             'Ваши координаты: ${state.user!.lat}  ${state.user!.long}',
                             style: const TextStyle(fontSize: 16),
                           ),

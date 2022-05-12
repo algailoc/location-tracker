@@ -26,18 +26,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void authorizationBlocListener(
       BuildContext context, AuthorizationState state) {
     if (state is UserAuthorized) {
-      Timer(const Duration(seconds: 3), () {
+      Timer(const Duration(seconds: 2), () {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const MainScreen()));
       });
     } else if (state is LocalUserChecked) {
       if (!state.localUserFound) {
-        Timer(const Duration(seconds: 3), () {
+        Timer(const Duration(seconds: 2), () {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => const AuthorizationScreen()));
         });
       } else if (state.localUserFound) {
-        Timer(const Duration(seconds: 3), () {
+        Timer(const Duration(seconds: 2), () {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const MainScreen()));
         });

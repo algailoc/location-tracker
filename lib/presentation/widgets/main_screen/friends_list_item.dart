@@ -115,6 +115,11 @@ class FriendsListItem extends StatelessWidget {
                       Icons.check_circle,
                       color: Colors.green,
                     )),
+              if (!friend.approved && friend.initializer)
+                const Tooltip(
+                  message: 'Ожидает одобрения',
+                  child: Icon(Icons.av_timer, color: Colors.orange),
+                ),
               if (friend.approved)
                 IconButton(
                     tooltip: 'Координаты',
