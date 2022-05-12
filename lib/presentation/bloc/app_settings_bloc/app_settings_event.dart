@@ -10,3 +10,5 @@ class ChangeAppThemeEvent extends AppSettingsEvent {
 
   ChangeAppThemeEvent(this.theme);
 }
+
+class ClearStateEvent extends AppSettingsEvent {}

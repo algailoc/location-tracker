@@ -1,5 +1,10 @@
+import 'package:firebase_tracker/presentation/bloc/app_settings_bloc/app_settings_bloc.dart';
+import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
 import 'package:firebase_tracker/presentation/widgets/main_screen/app_settings_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../bloc/authorization_bloc/authorization_bloc.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final String title;
@@ -17,6 +22,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     }
   }
 
+  void logOut(BuildContext context) {
+    BlocProvider.of<AuthorizationBloc>(context).add(SignOutUser());
+    BlocProvider.of<UsersBloc>(context).add(ClearState());
+    BlocProvider.of<AppSettingsBloc>(context).add(ClearStateEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -26,7 +37,10 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           IconButton(
               onPressed: () => onSettingsPressed(context),
               icon: const Icon(Icons.miscellaneous_services_outlined,
-                  color: Colors.white))
+                  color: Colors.white)),
+        IconButton(
+            onPressed: () => logOut(context),
+            icon: const Icon(Icons.logout, color: Colors.white))
       ],
     );
   }

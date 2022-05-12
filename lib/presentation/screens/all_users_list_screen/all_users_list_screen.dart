@@ -17,7 +17,7 @@ class AllUsersListScreen extends StatelessWidget {
 
   List<User> filterUsers(BuildContext context, List<User> list) {
     bool isUserFriend(User element) {
-      User user = BlocProvider.of<UsersBloc>(context).user;
+      User? user = BlocProvider.of<UsersBloc>(context).user;
       if (user != null) {
         final tempFriends = user.friends.where((el) => el.id == element.id);
         return tempFriends.isNotEmpty;

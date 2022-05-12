@@ -14,4 +14,8 @@ class AppSettingsUsecases {
   void setAppTheme(AppTheme theme) {
     return repository.setAppTheme(theme);
   }
+
+  void clearState() {
+    return repository.clearState();
+  }
 }

@@ -10,7 +10,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   final UsersUsecases usecases;
 
   List<User> users = [];
-  late User user;
+  User? user;
 
   UsersBloc({required this.usecases}) : super(UsersInitial()) {
     on<UsersEvent>((event, emit) async {
@@ -29,7 +29,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           emit(UsersErrorState(
               users: users, user: user, message: error.message));
         }, (success) {
-          success = success.where((element) => element.id != user.id).toList();
+          success = success.where((element) => element.id != user!.id).toList();
           // success = success.where((element) => !isUserFriend(element)).toList();
           users = success;
           emit(UsersLoadedState(users: users, user: user));
@@ -70,6 +70,10 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           user = success;
           emit(UsersLoadedState(users: users, user: user));
         });
+      } else if (event is ClearState) {
+        users = [];
+        user = null;
+        emit(UsersInitial());
       }
     });
   }

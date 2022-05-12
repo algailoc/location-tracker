@@ -1,4 +1,3 @@
-import 'package:firebase_tracker/domain/entites/user.dart';
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
 import 'package:firebase_tracker/presentation/widgets/main_screen/friends_list_item.dart';
 import 'package:flutter/material.dart';

@@ -30,3 +30,5 @@ class UpdateCoordinates extends UsersEvent {
 
   UpdateCoordinates(this.lat, this.long);
 }
+
+class ClearState extends UsersEvent {}

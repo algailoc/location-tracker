@@ -19,4 +19,9 @@ class AppSettingsRepositoryImpl extends AppSettingsRepository {
   void setAppTheme(AppTheme theme) {
     localDatasource.setAppTheme(theme);
   }
+
+  @override
+  void clearState() {
+    localDatasource.setAppTheme(AppTheme.Light);
+  }
 }

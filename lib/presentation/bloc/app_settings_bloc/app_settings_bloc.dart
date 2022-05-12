@@ -24,6 +24,10 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
         usecases.setAppTheme(event.theme);
         settings = settings.copyWith(theme: event.theme);
         emit(AppSettingsLoaded(settings: settings));
+      } else if (event is ClearStateEvent) {
+        usecases.clearState();
+        emit(AppSettingsLoaded(
+            settings: AppSettingsModel(theme: AppTheme.Light)));
       }
     });
   }

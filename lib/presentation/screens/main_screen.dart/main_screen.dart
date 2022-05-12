@@ -13,6 +13,7 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../widgets/general/custom_app_bar.dart';
 import '../../widgets/main_screen/app_settings_menu.dart';
+import 'package:background_location/background_location.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    // backgroundLocationService();
     if (BlocProvider.of<UsersBloc>(context).state.user == null) {
       BlocProvider.of<UsersBloc>(context).add(GetUserData());
     }
@@ -39,8 +41,17 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  void logOut() {
-    BlocProvider.of<AuthorizationBloc>(context).add(SignOutUser());
+  void backgroundLocationService() {
+    BackgroundLocation.setAndroidNotification(
+      title: "Геолокация",
+      message: "Получение геолокации...",
+      icon: "@mipmap/ic_launcher",
+    );
+    BackgroundLocation.startLocationService();
+
+    BackgroundLocation.getLocationUpdates((location) {
+      print('new location $location');
+    });
   }
 
   void authorizationBlocListener(
@@ -78,7 +89,8 @@ class _MainScreenState extends State<MainScreen> {
           Geolocator.getPositionStream(locationSettings: locationSettings)
               .listen((Position? position) {
         if (position != null &&
-            BlocProvider.of<UsersBloc>(context).user.id.isNotEmpty) {
+            BlocProvider.of<UsersBloc>(context).user != null &&
+            BlocProvider.of<UsersBloc>(context).user!.id.isNotEmpty) {
           updateUserCoordinates();
         }
       });

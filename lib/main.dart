@@ -7,7 +7,6 @@ import 'package:firebase_tracker/presentation/screens/loading_screen/loading_scr
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dependencies_injection.dart' as di;
-import 'domain/entites/app_settings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
