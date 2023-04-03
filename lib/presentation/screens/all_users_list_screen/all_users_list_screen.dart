@@ -15,10 +15,13 @@ class AllUsersListScreen extends StatefulWidget {
 
 class _AllUsersListScreenState extends State<AllUsersListScreen> {
   final _queryController = TextEditingController();
+  List<User> users = [];
 
   @override
   void initState() {
     BlocProvider.of<UsersBloc>(context).add(GetAllUsers());
+    users =
+        filterUsers(context, BlocProvider.of<UsersBloc>(context).state.users);
     super.initState();
   }
 
@@ -58,6 +61,13 @@ class _AllUsersListScreenState extends State<AllUsersListScreen> {
     return list;
   }
 
+  void onInputChanged(String q) {
+    setState(() {
+      users =
+          filterUsers(context, BlocProvider.of<UsersBloc>(context).state.users);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UsersBloc, UsersState>(
@@ -75,7 +85,6 @@ class _AllUsersListScreenState extends State<AllUsersListScreen> {
           );
         }
 
-        final List<User> list = filterUsers(context, state.users);
         return Scaffold(
           appBar: const CustomAppBar(
             title: 'Tracker App',
@@ -84,14 +93,23 @@ class _AllUsersListScreenState extends State<AllUsersListScreen> {
           body: Column(
             children: [
               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: TextField(
+                  controller: _queryController,
+                  onChanged: onInputChanged,
+                  decoration: const InputDecoration(hintText: 'Поиск'),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: ListView.builder(
                   itemBuilder: (context, index) {
-                    return UsersListItem(user: list[index]);
+                    return UsersListItem(user: users[index]);
                   },
                   shrinkWrap: true,
-                  itemCount: list.length,
+                  itemCount: users.length,
                 ),
               ),
             ],
