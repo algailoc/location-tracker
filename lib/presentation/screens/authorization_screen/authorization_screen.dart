@@ -1,5 +1,6 @@
 import 'package:firebase_tracker/core/utils/show_custom_snackbar.dart';
 import 'package:firebase_tracker/presentation/bloc/authorization_bloc/authorization_bloc.dart';
+import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
 import 'package:firebase_tracker/presentation/screens/main_screen.dart/main_screen.dart';
 import 'package:firebase_tracker/presentation/widgets/general/custom_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
     if (state is UserAuthorized) {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const MainScreen()));
+      BlocProvider.of<UsersBloc>(context).add(GetUserData());
     }
     if (state is AuthorizationError) {
       showCustomSnackBar(context, state.error, type: SnackBarType.error);

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_tracker/core/themes/app_themes.dart';
 import 'package:firebase_tracker/core/utils/show_custom_snackbar.dart';
 import 'package:firebase_tracker/presentation/bloc/authorization_bloc/authorization_bloc.dart';
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
@@ -144,7 +145,11 @@ class _MainScreenState extends State<MainScreen> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: goToAddUserPage,
-            child: const Icon(Icons.add),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.teal,
           ),
         ),
       ),
@@ -153,8 +158,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void dispose() {
-    if (positionStream != null) positionStream.cancel();
-    if (updateUsersTimer != null) updateUsersTimer.cancel();
+    positionStream.cancel();
+    updateUsersTimer.cancel();
     super.dispose();
   }
 }

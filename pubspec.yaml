@@ -45,9 +45,18 @@ dependencies:
   uuid: ^3.0.6
   firebase_auth: ^3.3.15
   url_launcher: ^6.1.0
-  geolocator: ^8.2.0
+  geolocator: ^9.0.2
   google_maps_flutter: ^2.1.4
-  background_location: ^0.8.1
+  background_location:
+    git:
+      url: https://github.com/Almoullim/background_location.git
+      ref: master
+  file: ^6.1.4
+  location: ^4.4.0
+  firebase_core_platform_interface: 4.5.1
+  firebase_messaging: ^13.0.4 
+  flutter_smart_dialog: ^4.9.0+4
+
 
 dev_dependencies:
   flutter_test:

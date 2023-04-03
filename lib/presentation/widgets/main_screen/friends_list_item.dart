@@ -1,7 +1,9 @@
 import 'package:firebase_tracker/domain/entites/user.dart';
 import 'package:firebase_tracker/presentation/screens/map_screen.dart/map_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../../bloc/users_bloc/users_bloc.dart';
 
@@ -83,6 +85,14 @@ class FriendsListItem extends StatelessWidget {
             MapScreen(lat: friendUser.lat, long: friendUser.long)));
   }
 
+  void copyCoordinates(BuildContext context) async {
+    User friendUser = getFriend(context);
+    await Clipboard.setData(
+      ClipboardData(text: '${friendUser.lat}, ${friendUser.long}'),
+    );
+    SmartDialog.showToast('Координаты скопированы в буфер обмена');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -96,36 +106,62 @@ class FriendsListItem extends StatelessWidget {
       ),
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
-      child: Card(
-        elevation: 5,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                getFriend(context).email,
-                style: const TextStyle(fontSize: 16),
-              ),
-              if (!friend.approved && !friend.initializer)
-                IconButton(
-                    tooltip: 'Одобрить',
-                    onPressed: () => approveFriend(context),
-                    icon: const Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                    )),
-              if (!friend.approved && friend.initializer)
-                const Tooltip(
-                  message: 'Ожидает одобрения',
-                  child: Icon(Icons.av_timer, color: Colors.orange),
+      child: SizedBox(
+        height: 60,
+        child: Card(
+          elevation: 5,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              children: [
+                Text(
+                  getFriend(context).email,
+                  style: const TextStyle(fontSize: 16),
                 ),
-              if (friend.approved)
-                IconButton(
-                    tooltip: 'Координаты',
-                    onPressed: () => showFriendOnMap(context),
-                    icon: const Icon(Icons.map)),
-            ],
+                const Spacer(),
+                if (friend.approved)
+                  IconButton(
+                    onPressed: () => copyCoordinates(context),
+                    icon: const Icon(
+                      Icons.copy,
+                      size: 18,
+                    ),
+                  ),
+                BlocBuilder<UsersBloc, UsersState>(builder: (context, state) {
+                  if (state is ApprovePendingState &&
+                      state.friendId == friend.id) {
+                    return const SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (!friend.approved && !friend.initializer) {
+                    return IconButton(
+                        tooltip: 'Одобрить',
+                        onPressed: () => approveFriend(context),
+                        icon: const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                        ));
+                  }
+                  if (!friend.approved && friend.initializer) {
+                    return const Tooltip(
+                      message: 'Ожидает одобрения',
+                      child: Icon(Icons.av_timer, color: Colors.orange),
+                    );
+                  }
+                  if (friend.approved) {
+                    return IconButton(
+                        tooltip: 'Координаты',
+                        onPressed: () => showFriendOnMap(context),
+                        icon: const Icon(Icons.map));
+                  }
+
+                  return const SizedBox();
+                }),
+              ],
+            ),
           ),
         ),
       ),

@@ -33,3 +33,16 @@ class FriendAddedState extends UsersState {
   const FriendAddedState({required List<User> users, required User? user})
       : super(users: users, user: user);
 }
+
+class FriendAddPending extends UsersState {
+  const FriendAddPending({required List<User> users, required User? user})
+      : super(users: users, user: user);
+}
+
+class ApprovePendingState extends UsersState {
+  final String friendId;
+
+  const ApprovePendingState(
+      {required this.friendId, required List<User> users, required User? user})
+      : super(users: users, user: user);
+}

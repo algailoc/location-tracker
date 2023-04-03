@@ -6,8 +6,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/entites/user.dart';
 import '../../widgets/general/custom_app_bar.dart';
 
-class AllUsersListScreen extends StatelessWidget {
+class AllUsersListScreen extends StatefulWidget {
   const AllUsersListScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AllUsersListScreen> createState() => _AllUsersListScreenState();
+}
+
+class _AllUsersListScreenState extends State<AllUsersListScreen> {
+  final _queryController = TextEditingController();
+
+  @override
+  void initState() {
+    BlocProvider.of<UsersBloc>(context).add(GetAllUsers());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _queryController.dispose();
+    super.dispose();
+  }
 
   void usersBlocListener(BuildContext context, UsersState state) {
     if (state is FriendAddedState) {
@@ -25,7 +44,16 @@ class AllUsersListScreen extends StatelessWidget {
       return false;
     }
 
-    list = list.where((element) => !isUserFriend(element)).toList();
+    final query = _queryController.text.trim();
+
+    if (query.isEmpty) {
+      list = list.where((element) => !isUserFriend(element)).toList();
+    } else {
+      list = list
+          .where((element) =>
+              !isUserFriend(element) && element.email.contains(query))
+          .toList();
+    }
 
     return list;
   }
@@ -35,18 +63,38 @@ class AllUsersListScreen extends StatelessWidget {
     return BlocConsumer<UsersBloc, UsersState>(
       listener: usersBlocListener,
       builder: (context, state) {
+        if (state is FriendAddPending) {
+          return const Scaffold(
+            appBar: CustomAppBar(
+              title: 'Tracker App',
+              showBackButton: false,
+            ),
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
         final List<User> list = filterUsers(context, state.users);
         return Scaffold(
-          appBar: const CustomAppBar(title: 'Tracker App'),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                return UsersListItem(user: list[index]);
-              },
-              shrinkWrap: true,
-              itemCount: list.length,
-            ),
+          appBar: const CustomAppBar(
+            title: 'Tracker App',
+            showBackButton: true,
+          ),
+          body: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    return UsersListItem(user: list[index]);
+                  },
+                  shrinkWrap: true,
+                  itemCount: list.length,
+                ),
+              ),
+            ],
           ),
         );
       },

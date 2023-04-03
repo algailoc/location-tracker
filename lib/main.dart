@@ -6,6 +6,7 @@ import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
 import 'package:firebase_tracker/presentation/screens/loading_screen/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'dependencies_injection.dart' as di;
 
 void main() async {
@@ -36,7 +37,11 @@ class MyApp extends StatelessWidget {
       child: BlocBuilder<AppSettingsBloc, AppSettingsState>(
         builder: (context, state) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             theme: appThemeData[state.settings.theme],
+            navigatorObservers: [FlutterSmartDialog.observer],
+            // here
+            builder: FlutterSmartDialog.init(),
             home: const LoadingScreen(),
           );
         },

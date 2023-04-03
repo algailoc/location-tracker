@@ -15,6 +15,7 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   UsersBloc({required this.usecases}) : super(UsersInitial()) {
     on<UsersEvent>((event, emit) async {
       if (event is GetUserData) {
+        emit(UsersPendingState(user: user, users: users));
         final result = await usecases.getUser();
         result.fold((error) {
           emit(UsersErrorState(
@@ -24,17 +25,19 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           emit(UsersLoadedState(users: users, user: user));
         });
       } else if (event is GetAllUsers) {
+        emit(UsersPendingState(user: user, users: users));
+
         final result = await usecases.getAllUsers();
         result.fold((error) {
           emit(UsersErrorState(
               users: users, user: user, message: error.message));
         }, (success) {
           success = success.where((element) => element.id != user!.id).toList();
-          // success = success.where((element) => !isUserFriend(element)).toList();
           users = success;
           emit(UsersLoadedState(users: users, user: user));
         });
       } else if (event is AddFriend) {
+        emit(FriendAddPending(users: users, user: user));
         final result = await usecases.addFriend(event.friendId);
         result.fold((error) {
           emit(UsersErrorState(
@@ -44,10 +47,18 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
           emit(FriendAddedState(users: users, user: user));
         });
       } else if (event is ApproveFriend) {
+        emit(ApprovePendingState(
+          users: users,
+          user: user,
+          friendId: event.friend.id,
+        ));
         final result = await usecases.approveFriend(event.friend);
         result.fold((error) {
           emit(UsersErrorState(
-              users: users, user: user, message: error.message));
+            users: users,
+            user: user,
+            message: error.message,
+          ));
         }, (success) {
           user = success;
           emit(UsersLoadedState(users: users, user: user));
