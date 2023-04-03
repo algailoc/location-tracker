@@ -18,4 +18,12 @@ class AppSettingsUsecases {
   void clearState() {
     return repository.clearState();
   }
+
+  Future<bool> getIsFirstLaunch() {
+    return repository.getIsFirstLaunch();
+  }
+
+  Future<void> setIsFirstLaunch(bool value) {
+    return repository.setIsFirstLaunch(value);
+  }
 }

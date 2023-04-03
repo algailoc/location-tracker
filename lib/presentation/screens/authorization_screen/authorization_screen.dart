@@ -53,46 +53,51 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Tracker App'),
-      body: BlocListener<AuthorizationBloc, AuthorizationState>(
-        listener: authorizationBlocListener,
-        child: Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-          child: Column(
-            children: [
-              TextField(
-                controller: emailController,
-                onChanged: (_) => setState(() {}),
-                decoration: const InputDecoration(helperText: 'Почта'),
-              ),
-              TextField(
-                controller: passwordController,
-                onChanged: (_) => setState(() {}),
-                decoration: const InputDecoration(helperText: 'Пароль'),
-              ),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: isButtonDisabled() ? null : signUp,
-                child: const Text('Зарегистрироваться'),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(isButtonDisabled()
-                      ? Colors.grey
-                      : Theme.of(context).colorScheme.primary),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: const CustomAppBar(title: 'Tracker App'),
+        body: BlocListener<AuthorizationBloc, AuthorizationState>(
+          listener: authorizationBlocListener,
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+            child: Column(
+              children: [
+                TextField(
+                  controller: emailController,
+                  onChanged: (_) => setState(() {}),
+                  decoration: const InputDecoration(helperText: 'Почта'),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: isButtonDisabled() ? null : signIn,
-                child: const Text('Войти'),
-                style: ButtonStyle(
+                TextField(
+                  controller: passwordController,
+                  onChanged: (_) => setState(() {}),
+                  decoration: const InputDecoration(helperText: 'Пароль'),
+                ),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: isButtonDisabled() ? null : signUp,
+                  child: const Text('Зарегистрироваться'),
+                  style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
-                  isButtonDisabled()
-                      ? Colors.grey
-                      : Theme.of(context).colorScheme.primary,
-                )),
-              )
-            ],
+                        isButtonDisabled()
+                            ? Colors.grey
+                            : Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: isButtonDisabled() ? null : signIn,
+                  child: const Text('Войти'),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                    isButtonDisabled()
+                        ? Colors.grey
+                        : Theme.of(context).colorScheme.primary,
+                  )),
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -6,6 +6,8 @@ abstract class LocalDatasource {
   Future<String> setUserToken(String userToken);
   AppTheme getAppTheme();
   void setAppTheme(AppTheme theme);
+  Future<bool> getIsFirstLaunch();
+  Future<void> setIsFirstLaunch(bool value);
 }
 
 class LocalDatasourceImpl extends LocalDatasource {
@@ -43,5 +45,16 @@ class LocalDatasourceImpl extends LocalDatasource {
   void setAppTheme(AppTheme theme) {
     preferences.setString(
         'APP_THEME', theme == AppTheme.Light ? 'light' : 'dark');
+  }
+
+  @override
+  Future<bool> getIsFirstLaunch() async {
+    final result = preferences.getBool('FIRST_LAUNCH');
+    return result ?? true;
+  }
+
+  @override
+  Future<void> setIsFirstLaunch(bool value) {
+    return preferences.setBool('FIRST_LAUNCH', value);
   }
 }

@@ -12,3 +12,9 @@ class ChangeAppThemeEvent extends AppSettingsEvent {
 }
 
 class ClearStateEvent extends AppSettingsEvent {}
+
+class SetFirstLaunchEvent extends AppSettingsEvent {
+  final bool value;
+
+  SetFirstLaunchEvent(this.value);
+}

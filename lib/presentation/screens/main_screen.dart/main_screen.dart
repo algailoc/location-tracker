@@ -6,6 +6,7 @@ import 'package:firebase_tracker/presentation/bloc/authorization_bloc/authorizat
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
 import 'package:firebase_tracker/presentation/screens/all_users_list_screen/all_users_list_screen.dart';
 import 'package:firebase_tracker/presentation/screens/loading_screen/loading_screen.dart';
+import 'package:firebase_tracker/presentation/widgets/main_screen/approved_instructions.dart';
 import 'package:firebase_tracker/presentation/widgets/main_screen/friends_list.dart';
 import 'package:firebase_tracker/presentation/widgets/main_screen/user_info_card.dart';
 import 'package:flutter/material.dart';
@@ -141,6 +142,7 @@ class _MainScreenState extends State<MainScreen> {
             child: Column(
               children: const [
                 UserInfoCard(),
+                ApprovedInstructions(),
                 FriendsList(),
               ],
             ),

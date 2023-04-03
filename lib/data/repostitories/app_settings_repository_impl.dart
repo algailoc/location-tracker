@@ -24,4 +24,14 @@ class AppSettingsRepositoryImpl extends AppSettingsRepository {
   void clearState() {
     localDatasource.setAppTheme(AppTheme.Light);
   }
+
+  @override
+  Future<bool> getIsFirstLaunch() {
+    return localDatasource.getIsFirstLaunch();
+  }
+
+  @override
+  Future<void> setIsFirstLaunch(bool value) {
+    return localDatasource.setIsFirstLaunch(value);
+  }
 }

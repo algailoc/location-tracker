@@ -5,4 +5,7 @@ abstract class AppSettingsRepository {
   void setAppTheme(AppTheme theme);
 
   void clearState();
+
+  Future<bool> getIsFirstLaunch();
+  Future<void> setIsFirstLaunch(bool value);
 }
