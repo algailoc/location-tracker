@@ -1,3 +1,4 @@
+import 'package:firebase_tracker/core/utils/show_custom_snackbar.dart';
 import 'package:firebase_tracker/domain/entites/user.dart';
 import 'package:firebase_tracker/presentation/screens/map_screen.dart/map_screen.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +91,11 @@ class FriendsListItem extends StatelessWidget {
     await Clipboard.setData(
       ClipboardData(text: '${friendUser.lat}, ${friendUser.long}'),
     );
-    SmartDialog.showToast('Координаты скопированы в буфер обмена');
+    showCustomSnackBar(
+      context,
+      'Координаты скопированы в буфер обмена',
+      type: SnackBarType.success,
+    );
   }
 
   @override

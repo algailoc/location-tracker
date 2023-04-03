@@ -1,3 +1,4 @@
+import 'package:firebase_tracker/core/utils/show_custom_snackbar.dart';
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
 import 'package:firebase_tracker/presentation/widgets/all_users_list_screen/all_users_list_item.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,8 @@ class _AllUsersListScreenState extends State<AllUsersListScreen> {
   void usersBlocListener(BuildContext context, UsersState state) {
     if (state is FriendAddedState) {
       Navigator.of(context).pop();
+    } else if (state is UsersErrorState) {
+      showCustomSnackBar(context, state.message, type: SnackBarType.error);
     }
   }
 
@@ -90,29 +93,27 @@ class _AllUsersListScreenState extends State<AllUsersListScreen> {
             title: 'Tracker App',
             showBackButton: true,
           ),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: TextField(
-                  controller: _queryController,
-                  onChanged: onInputChanged,
-                  decoration: const InputDecoration(hintText: 'Поиск'),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.transparent,
+                  flexibleSpace: TextField(
+                    controller: _queryController,
+                    onChanged: onInputChanged,
+                    decoration: const InputDecoration(hintText: 'Поиск'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return UsersListItem(user: users[index]);
-                  },
-                  shrinkWrap: true,
-                  itemCount: users.length,
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => UsersListItem(user: users[index]),
+                    childCount: users.length,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
