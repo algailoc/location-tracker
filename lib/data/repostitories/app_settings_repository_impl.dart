@@ -22,7 +22,7 @@ class AppSettingsRepositoryImpl extends AppSettingsRepository {
 
   @override
   void clearState() {
-    localDatasource.setAppTheme(AppTheme.Light);
+    localDatasource.setAppTheme(AppTheme.light);
   }
 
   @override

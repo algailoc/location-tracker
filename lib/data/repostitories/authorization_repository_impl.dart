@@ -6,6 +6,7 @@ import 'package:firebase_tracker/core/utils/auth_error_handler.dart';
 import 'package:firebase_tracker/data/datasources/local_datasource.dart';
 import 'package:firebase_tracker/data/datasources/remote_datasource.dart';
 import 'package:firebase_tracker/domain/repositories/authorization_repository.dart';
+import 'package:flutter/material.dart';
 
 class AuthorizationRepositoryImpl extends AuthorizationRepository {
   final LocalDatasource localDatasource;
@@ -38,7 +39,7 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
           return Left(ServerFailure('Ошибка при авторизации'));
         }
       } catch (e) {
-        print('Authorize User $e');
+        debugPrint('Authorize User $e');
         String message =
             e is FirebaseAuthException ? mapErrorToMessage(e.code) : '';
         return Left(ServerFailure('Ошибка при авторизации: $message'));
@@ -63,7 +64,7 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
           return Left(ServerFailure('Ошибка при авторизации'));
         }
       } catch (e) {
-        print('Register User $e');
+        debugPrint('Register User $e');
         String message =
             e is FirebaseAuthException ? mapErrorToMessage(e.code) : '';
         return Left(ServerFailure('Ошибка при авторизации: $message'));

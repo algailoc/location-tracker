@@ -5,6 +5,7 @@ import 'package:firebase_tracker/data/datasources/local_datasource.dart';
 import 'package:firebase_tracker/data/datasources/remote_datasource.dart';
 import 'package:firebase_tracker/domain/entites/user.dart';
 import 'package:firebase_tracker/domain/repositories/users_repository.dart';
+import 'package:flutter/material.dart';
 
 class UsersRepositoryImpl extends UsersRepository {
   final LocalDatasource localDatasource;
@@ -24,7 +25,7 @@ class UsersRepositoryImpl extends UsersRepository {
         final response = await remoteDatasource.addFriend(userToken, friendId);
         return Right(response);
       } catch (e) {
-        print('Add Friend $e');
+        debugPrint('Add Friend $e');
         return Left(ServerFailure('Ошибка при добавлении пользователя'));
       }
     } else {
@@ -40,7 +41,7 @@ class UsersRepositoryImpl extends UsersRepository {
         final response = await remoteDatasource.getAllUsers(userToken);
         return Right(response);
       } catch (e) {
-        print('Get All Users $e');
+        debugPrint('Get All Users $e');
         return Left(ServerFailure('Ошибка при получении данных'));
       }
     } else {
@@ -56,7 +57,7 @@ class UsersRepositoryImpl extends UsersRepository {
         final response = await remoteDatasource.getUser(userToken);
         return Right(response);
       } catch (e) {
-        print('Get User $e');
+        debugPrint('Get User $e');
         return Left(ServerFailure('Ошибка при получении данных'));
       }
     } else {
@@ -73,7 +74,7 @@ class UsersRepositoryImpl extends UsersRepository {
             await remoteDatasource.approveFriend(userToken, friend);
         return Right(response);
       } catch (e) {
-        print('Approve Friend $e');
+        debugPrint('Approve Friend $e');
         return Left(ServerFailure('Ошибка при получении данных'));
       }
     } else {
@@ -89,7 +90,7 @@ class UsersRepositoryImpl extends UsersRepository {
         final response = await remoteDatasource.deleteFriend(userToken, friend);
         return Right(response);
       } catch (e) {
-        print('Delete Friend $e');
+        debugPrint('Delete Friend $e');
         return Left(ServerFailure('Ошибка при удалении пользователя'));
       }
     } else {
@@ -107,7 +108,7 @@ class UsersRepositoryImpl extends UsersRepository {
             await remoteDatasource.updateCoordinates(userToken, lat, long);
         return Right(response);
       } catch (e) {
-        print('Update coordinates $e');
+        debugPrint('Update coordinates $e');
         return Left(ServerFailure('Ошибка при обновлении данных'));
       }
     } else {

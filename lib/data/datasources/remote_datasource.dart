@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebaseAuth;
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_tracker/core/errors/exceptions.dart';
 import 'package:firebase_tracker/data/models/user_model.dart';
 
@@ -27,7 +27,7 @@ abstract class RemoteDatasource {
 
 class RemoteDatacourceImpl extends RemoteDatasource {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  firebaseAuth.FirebaseAuth auth = firebaseAuth.FirebaseAuth.instance;
+  firebase_auth.FirebaseAuth auth = firebase_auth.FirebaseAuth.instance;
 
   @override
   Future<List<User>> getAllUsers(String userToken) async {
@@ -35,9 +35,9 @@ class RemoteDatacourceImpl extends RemoteDatasource {
     if (userToken.isNotEmpty) {
       await users.get().then((value) {
         if (value.docs.isNotEmpty) {
-          value.docs.forEach((e) {
+          for (var e in value.docs) {
             result.add(UserModel.fromJson(e.data() as dynamic));
-          });
+          }
         }
       });
       return result;
@@ -247,21 +247,21 @@ class RemoteDatacourceImpl extends RemoteDatasource {
 
   @override
   Future<String> authorizeUser(String email, String password) async {
-    await firebaseAuth.FirebaseAuth.instance
+    await firebase_auth.FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
     return 'success';
   }
 
   @override
   Future<String> registerUser(String email, String password) async {
-    await firebaseAuth.FirebaseAuth.instance
+    await firebase_auth.FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
     return 'success';
   }
 
   @override
   Future<String> signOut() async {
-    await firebaseAuth.FirebaseAuth.instance.signOut();
+    await firebase_auth.FirebaseAuth.instance.signOut();
     return 'success';
   }
 }

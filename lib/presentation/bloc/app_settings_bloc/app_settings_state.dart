@@ -14,7 +14,7 @@ abstract class AppSettingsState {
 class AppSettingsInitial extends AppSettingsState {
   AppSettingsInitial()
       : super(
-          settings: AppSettingsModel(theme: AppTheme.Light),
+          settings: AppSettingsModel(theme: AppTheme.light),
           isFirstLaunch: false,
         );
 }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_tracker/core/themes/app_themes.dart';
 import 'package:firebase_tracker/core/utils/show_custom_snackbar.dart';
 import 'package:firebase_tracker/presentation/bloc/authorization_bloc/authorization_bloc.dart';
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
@@ -51,9 +50,7 @@ class _MainScreenState extends State<MainScreen> {
     );
     BackgroundLocation.startLocationService();
 
-    BackgroundLocation.getLocationUpdates((location) {
-      print('new location $location');
-    });
+    BackgroundLocation.getLocationUpdates((location) {});
   }
 
   void authorizationBlocListener(

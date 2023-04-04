@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 part 'app_settings_event.dart';
 part 'app_settings_state.dart';
 
-final AppSettings initSettings = AppSettingsModel(theme: AppTheme.Light);
+final AppSettings initSettings = AppSettingsModel(theme: AppTheme.light);
 
 class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
   AppSettings settings = initSettings;
@@ -35,7 +35,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
         usecases.clearState();
         await usecases.setIsFirstLaunch(true);
         emit(AppSettingsLoaded(
-          settings: AppSettingsModel(theme: AppTheme.Light),
+          settings: AppSettingsModel(theme: AppTheme.light),
           isFirstLaunch: isFirstLaunch,
         ));
       } else if (event is SetFirstLaunchEvent) {

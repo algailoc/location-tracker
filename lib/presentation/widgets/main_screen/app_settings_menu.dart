@@ -27,9 +27,9 @@ class AppSettingsMenu extends StatelessWidget {
             child: Column(
               children: [
                 buildMenuOption(context, 'Светлая',
-                    () => changeThemeHandler(AppTheme.Light, context)),
+                    () => changeThemeHandler(AppTheme.light, context)),
                 buildMenuOption(context, 'Тёмная',
-                    () => changeThemeHandler(AppTheme.Dark, context)),
+                    () => changeThemeHandler(AppTheme.dark, context)),
               ],
             ),
           );

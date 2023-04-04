@@ -1,4 +1,4 @@
-enum AppTheme { Light, Dark }
+enum AppTheme { light, dark }
 
 abstract class AppSettings {
   final AppTheme theme;

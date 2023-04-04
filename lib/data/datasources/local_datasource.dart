@@ -38,13 +38,13 @@ class LocalDatasourceImpl extends LocalDatasource {
   @override
   AppTheme getAppTheme() {
     final result = preferences.getString('APP_THEME');
-    return result == 'dark' ? AppTheme.Dark : AppTheme.Light;
+    return result == 'dark' ? AppTheme.dark : AppTheme.light;
   }
 
   @override
   void setAppTheme(AppTheme theme) {
     preferences.setString(
-        'APP_THEME', theme == AppTheme.Light ? 'light' : 'dark');
+        'APP_THEME', theme == AppTheme.light ? 'light' : 'dark');
   }
 
   @override

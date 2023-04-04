@@ -2,7 +2,7 @@ import 'package:firebase_tracker/domain/entites/app_settings.dart';
 import 'package:flutter/material.dart';
 
 final appThemeData = {
-  AppTheme.Light: ThemeData(
+  AppTheme.light: ThemeData(
       colorScheme: const ColorScheme(
         brightness: Brightness.light,
         primary: Colors.teal,
@@ -17,7 +17,7 @@ final appThemeData = {
         onSurface: Colors.black,
       ),
       textTheme: const TextTheme()),
-  AppTheme.Dark: ThemeData(
+  AppTheme.dark: ThemeData(
       colorScheme: const ColorScheme(
           brightness: Brightness.dark,
           primary: Colors.teal,
