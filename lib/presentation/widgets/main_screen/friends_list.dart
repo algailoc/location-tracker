@@ -26,7 +26,7 @@ class FriendsList extends StatelessWidget {
                     IconButton(
                       onPressed: () => BlocProvider.of<UsersBloc>(context)
                           .add(GetUserData()),
-                      icon: state is UsersPendingState
+                      icon: state.status == UserStatus.pending
                           ? const SizedBox(
                               width: 16,
                               height: 16,

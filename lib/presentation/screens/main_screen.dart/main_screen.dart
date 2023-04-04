@@ -65,10 +65,11 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void usersBlocListener(BuildContext context, UsersState state) {
-    if (state is UsersLoadedState && state.users.isEmpty) {
+    if (state.status == UserStatus.loaded && state.users.isEmpty) {
       BlocProvider.of<UsersBloc>(context).add(GetAllUsers());
-    } else if (state is UsersErrorState) {
-      showCustomSnackBar(context, state.message, type: SnackBarType.error);
+    } else if (state.status == UserStatus.error) {
+      showCustomSnackBar(context, state.message ?? '',
+          type: SnackBarType.error);
     }
   }
 

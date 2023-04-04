@@ -133,7 +133,7 @@ class FriendsListItem extends StatelessWidget {
                     ),
                   ),
                 BlocBuilder<UsersBloc, UsersState>(builder: (context, state) {
-                  if (state is ApprovePendingState &&
+                  if (state.status == UserStatus.friendApprovePending &&
                       state.friendId == friend.id) {
                     return const SizedBox(
                       width: 30,

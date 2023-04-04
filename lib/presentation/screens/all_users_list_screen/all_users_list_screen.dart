@@ -33,10 +33,14 @@ class _AllUsersListScreenState extends State<AllUsersListScreen> {
   }
 
   void usersBlocListener(BuildContext context, UsersState state) {
-    if (state is FriendAddedState) {
+    if (state.status == UserStatus.friendAdded) {
       Navigator.of(context).pop();
-    } else if (state is UsersErrorState) {
-      showCustomSnackBar(context, state.message, type: SnackBarType.error);
+    } else if (state.status == UserStatus.error) {
+      showCustomSnackBar(
+        context,
+        state.message ?? '',
+        type: SnackBarType.error,
+      );
     }
   }
 
@@ -76,7 +80,7 @@ class _AllUsersListScreenState extends State<AllUsersListScreen> {
     return BlocConsumer<UsersBloc, UsersState>(
       listener: usersBlocListener,
       builder: (context, state) {
-        if (state is FriendAddPending) {
+        if (state.status == UserStatus.friendAddPending) {
           return const Scaffold(
             appBar: CustomAppBar(
               title: 'Tracker App',

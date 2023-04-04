@@ -61,44 +61,49 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
         body: BlocListener<AuthorizationBloc, AuthorizationState>(
           listener: authorizationBlocListener,
           child: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-            child: Column(
-              children: [
-                TextField(
-                  controller: emailController,
-                  onChanged: (_) => setState(() {}),
-                  decoration: const InputDecoration(helperText: 'Почта'),
-                ),
-                TextField(
-                  controller: passwordController,
-                  onChanged: (_) => setState(() {}),
-                  decoration: const InputDecoration(helperText: 'Пароль'),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: isButtonDisabled() ? null : signUp,
-                  child: const Text('Зарегистрироваться'),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+              child: BlocBuilder<AuthorizationBloc, AuthorizationState>(
+                  builder: (context, state) {
+                if (state is AuthorizationPending) {
+                  return const CircularProgressIndicator();
+                }
+                return Column(
+                  children: [
+                    TextField(
+                      controller: emailController,
+                      onChanged: (_) => setState(() {}),
+                      decoration: const InputDecoration(helperText: 'Почта'),
+                    ),
+                    TextField(
+                      controller: passwordController,
+                      onChanged: (_) => setState(() {}),
+                      decoration: const InputDecoration(helperText: 'Пароль'),
+                    ),
+                    const Spacer(),
+                    ElevatedButton(
+                      onPressed: isButtonDisabled() ? null : signUp,
+                      child: const Text('Зарегистрироваться'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            isButtonDisabled()
+                                ? Colors.grey
+                                : Theme.of(context).colorScheme.primary),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: isButtonDisabled() ? null : signIn,
+                      child: const Text('Войти'),
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(
                         isButtonDisabled()
                             ? Colors.grey
-                            : Theme.of(context).colorScheme.primary),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: isButtonDisabled() ? null : signIn,
-                  child: const Text('Войти'),
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                    isButtonDisabled()
-                        ? Colors.grey
-                        : Theme.of(context).colorScheme.primary,
-                  )),
-                )
-              ],
-            ),
-          ),
+                            : Theme.of(context).colorScheme.primary,
+                      )),
+                    )
+                  ],
+                );
+              })),
         ),
       ),
     );

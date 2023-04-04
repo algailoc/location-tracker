@@ -12,79 +12,81 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   List<User> users = [];
   User? user;
 
-  UsersBloc({required this.usecases}) : super(UsersInitial()) {
+  UsersBloc({required this.usecases}) : super(const UsersState.initial()) {
     on<UsersEvent>((event, emit) async {
       if (event is GetUserData) {
-        emit(UsersPendingState(user: user, users: users));
+        emit(state.copyWith(status: UserStatus.pending));
         final result = await usecases.getUser();
         result.fold((error) {
-          emit(UsersErrorState(
-              users: users, user: user, message: error.message));
+          emit(
+              state.copyWith(message: error.message, status: UserStatus.error));
         }, (success) {
           user = success;
-          emit(UsersLoadedState(users: users, user: user));
+          emit(state.copyWith(user: user, status: UserStatus.loaded));
         });
       } else if (event is GetAllUsers) {
-        emit(UsersPendingState(user: user, users: users));
+        emit(state.copyWith(status: UserStatus.pending));
 
         final result = await usecases.getAllUsers();
         result.fold((error) {
-          emit(UsersErrorState(
-              users: users, user: user, message: error.message));
+          emit(
+              state.copyWith(message: error.message, status: UserStatus.error));
         }, (success) {
           success = success.where((element) => element.id != user!.id).toList();
           users = success;
-          emit(UsersLoadedState(users: users, user: user));
+          emit(state.copyWith(users: users, status: UserStatus.loaded));
         });
       } else if (event is AddFriend) {
-        emit(FriendAddPending(users: users, user: user));
+        emit(state.copyWith(status: UserStatus.friendAddPending));
         final result = await usecases.addFriend(event.friendId);
         result.fold((error) {
-          emit(UsersErrorState(
-              users: users, user: user, message: error.message));
+          emit(
+              state.copyWith(message: error.message, status: UserStatus.error));
         }, (success) {
           user = success;
-          emit(FriendAddedState(users: users, user: user));
+          emit(state.copyWith(user: user, status: UserStatus.friendAdded));
         });
       } else if (event is ApproveFriend) {
-        emit(ApprovePendingState(
-          users: users,
-          user: user,
-          friendId: event.friend.id,
-        ));
+        emit(state.copyWith(
+            friendId: event.friend.id,
+            status: UserStatus.friendApprovePending));
         final result = await usecases.approveFriend(event.friend);
         result.fold((error) {
-          emit(UsersErrorState(
-            users: users,
-            user: user,
-            message: error.message,
-          ));
+          emit(
+              state.copyWith(message: error.message, status: UserStatus.error));
         }, (success) {
           user = success;
-          emit(UsersLoadedState(users: users, user: user));
+          emit(state.copyWith(user: user, status: UserStatus.loaded));
         });
       } else if (event is DeleteFriend) {
         final result = await usecases.deleteFriend(event.friend);
         result.fold((error) {
-          emit(UsersErrorState(
-              users: users, user: user, message: error.message));
+          emit(
+              state.copyWith(message: error.message, status: UserStatus.error));
         }, (success) {
           user = success;
-          emit(UsersLoadedState(users: users, user: user));
+          emit(state.copyWith(user: user, status: UserStatus.loaded));
         });
       } else if (event is UpdateCoordinates) {
         final result = await usecases.updateCoordinates(event.lat, event.long);
         result.fold((error) {
-          emit(UsersErrorState(
-              users: users, user: user, message: error.message));
+          emit(
+              state.copyWith(message: error.message, status: UserStatus.error));
         }, (success) {
           user = success;
-          emit(UsersLoadedState(users: users, user: user));
+          emit(state.copyWith(user: user, status: UserStatus.loaded));
         });
       } else if (event is ClearState) {
         users = [];
         user = null;
-        emit(UsersInitial());
+        emit(
+          state.copyWith(
+            user: user,
+            users: users,
+            message: null,
+            status: UserStatus.initial,
+          ),
+        );
       }
     });
   }
