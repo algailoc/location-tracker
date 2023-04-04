@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:firebase_tracker/data/models/app_settings_model.dart';
 import 'package:firebase_tracker/domain/entites/app_settings.dart';
@@ -16,11 +14,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
   bool isFirstLaunch = false;
 
   final AppSettingsUsecases usecases;
-  AppSettingsBloc({required this.usecases})
-      : super(AppSettingsInitial(
-          settings: initSettings,
-          isFirstLaunch: false,
-        )) {
+  AppSettingsBloc({required this.usecases}) : super(AppSettingsInitial()) {
     on<AppSettingsEvent>((event, emit) async {
       if (event is GetAppSettingsEvent) {
         final result = usecases.getAppSettings();

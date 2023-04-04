@@ -12,11 +12,10 @@ abstract class AppSettingsState {
 }
 
 class AppSettingsInitial extends AppSettingsState {
-  const AppSettingsInitial(
-      {required AppSettings settings, required bool isFirstLaunch})
+  AppSettingsInitial()
       : super(
-          settings: settings,
-          isFirstLaunch: isFirstLaunch,
+          settings: AppSettingsModel(theme: AppTheme.Light),
+          isFirstLaunch: false,
         );
 }
 
