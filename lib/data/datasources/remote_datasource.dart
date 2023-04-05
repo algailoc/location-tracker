@@ -8,20 +8,39 @@ import 'package:uuid/uuid.dart';
 
 abstract class RemoteDatasource {
   // Users Bloc
+  /// Добавляет другого юзера в друзья
   Future<User> addFriend(String userToken, String friendId);
+
+  /// Одобряет заявку на друга
   Future<User> approveFriend(String userToken, Friend friendToApprove);
+
+  /// Удаляет друга
   Future<User> deleteFriend(String userToken, Friend friendToDelete);
+
+  /// Обновляет координаты(при работающем приложении)
   Future<User> updateCoordinates(String userToken, double lat, double long);
 
   // Auth Bloc
+  /// Возвращает токен пользователя по почте
   Future<String> getUserUserToken(String email);
+
+  /// Создает пользователя по почте в удаленной бд, содержащей информацию о пользователе
   Future<String> createUser(String email);
+
+  /// Регистрирует пользователя с почтой и паролем
   Future<String> registerUser(String email, String password);
+
+  /// Авторизует пользователя по почте и паролю
   Future<String> authorizeUser(String email, String password);
+
+  /// Производит выход из аккаунта
   Future<String> signOut();
 
   // Misc
+  /// Получает информацию о пользователе по токену
   Future<User> getUser(String userToken);
+
+  /// Получает список всех зарегистрированных пользователей
   Future<List<User>> getAllUsers(String userToken);
 }
 
@@ -63,7 +82,6 @@ class RemoteDatacourceImpl extends RemoteDatasource {
 
     await users.doc(userToken).update({
       'friends': FieldValue.arrayUnion([
-        // {'id': friendId, 'approved': false, 'initializer': false}
         {'id': friendId, 'approved': false, 'initializer': true}
       ]),
     });

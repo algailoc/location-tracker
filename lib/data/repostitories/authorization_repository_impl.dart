@@ -54,8 +54,10 @@ class AuthorizationRepositoryImpl extends AuthorizationRepository {
       String email, String password) async {
     if (await networkInfo.isConnected) {
       try {
+        // Сначала регистрирует пользователя по почте и паролю
         final regResult = await remoteDatasource.registerUser(email, password);
         if (regResult == 'success') {
+          // Если регистрация успешна, то создаем начальные данные пользователя в удаленном хранилище в отдельной таблице
           final creationResult = await remoteDatasource.createUser(email);
           await localDatasource.setUserToken(creationResult);
 

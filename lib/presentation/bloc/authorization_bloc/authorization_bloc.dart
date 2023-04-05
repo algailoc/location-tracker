@@ -28,7 +28,7 @@ class AuthorizationBloc extends Bloc<AuthorizationEvent, AuthorizationState> {
         result.fold((failure) async {
           emit(AuthorizationError(failure.message));
         }, (success) async {
-          emit(UserAuthorized());
+          emit(UserAuthorized(showTip: false));
         });
       } else if (event is SignOutUser) {
         emit(AuthorizationPending());

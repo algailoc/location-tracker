@@ -19,4 +19,8 @@ class LocalUserChecked extends AuthorizationState {
   LocalUserChecked(this.localUserFound);
 }
 
-class UserAuthorized extends AuthorizationState {}
+class UserAuthorized extends AuthorizationState {
+  final bool showTip;
+
+  UserAuthorized({this.showTip = true});
+}

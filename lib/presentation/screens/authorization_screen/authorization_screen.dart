@@ -1,4 +1,5 @@
 import 'package:firebase_tracker/core/utils/show_custom_snackbar.dart';
+import 'package:firebase_tracker/presentation/bloc/app_settings_bloc/app_settings_bloc.dart';
 import 'package:firebase_tracker/presentation/bloc/authorization_bloc/authorization_bloc.dart';
 import 'package:firebase_tracker/presentation/bloc/users_bloc/users_bloc.dart';
 import 'package:firebase_tracker/presentation/screens/main_screen.dart/main_screen.dart';
@@ -37,6 +38,10 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
   void authorizationBlocListener(
       BuildContext context, AuthorizationState state) {
     if (state is UserAuthorized) {
+      if (!state.showTip) {
+        BlocProvider.of<AppSettingsBloc>(context)
+            .add(SetFirstLaunchEvent(false));
+      }
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const MainScreen()));
       BlocProvider.of<UsersBloc>(context).add(GetUserData());

@@ -2,11 +2,22 @@ import 'package:firebase_tracker/domain/entites/app_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalDatasource {
+  /// Возвращает токен пользователя
   String getUserToken();
+
+  /// Сохраняет токен пользователя
   Future<String> setUserToken(String userToken);
+
+  /// Получает инфо о выбранной теме приложения
   AppTheme getAppTheme();
+
+  /// Меняет тему приложения
   void setAppTheme(AppTheme theme);
+
+  /// Возвращает, было ли запущено приложение впервые(с активным аккаунтом)
   Future<bool> getIsFirstLaunch();
+
+  /// Устанавливает параметр первого запуска для пользователя
   Future<void> setIsFirstLaunch(bool value);
 }
 
