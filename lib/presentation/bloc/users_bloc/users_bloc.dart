@@ -79,14 +79,10 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
       } else if (event is ClearState) {
         users = [];
         user = null;
-        emit(
-          state.copyWith(
-            user: user,
-            users: users,
-            message: null,
-            status: UserStatus.initial,
-          ),
-        );
+        emit(UsersState(
+          status: UserStatus.initial,
+          users: users,
+        ));
       }
     });
   }
